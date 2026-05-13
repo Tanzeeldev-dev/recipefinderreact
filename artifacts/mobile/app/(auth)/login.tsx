@@ -15,6 +15,8 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useAuth } from "@/context/AuthContext";
 import { useColors } from "@/hooks/useColors";
 
+const webInput = Platform.OS === "web" ? ({ outlineWidth: 0 } as any) : {};
+
 export default function LoginScreen() {
   const colors = useColors();
   const insets = useSafeAreaInsets();
@@ -83,7 +85,7 @@ export default function LoginScreen() {
             <View style={[styles.inputWrap, { backgroundColor: colors.muted, borderColor: colors.border }]}>
               <Ionicons name="mail-outline" size={18} color={colors.mutedForeground} />
               <TextInput
-                style={[styles.input, { color: colors.foreground }]}
+                style={[styles.input, { color: colors.foreground }, webInput]}
                 value={email}
                 onChangeText={setEmail}
                 placeholder="your@email.com"
@@ -100,7 +102,7 @@ export default function LoginScreen() {
             <View style={[styles.inputWrap, { backgroundColor: colors.muted, borderColor: colors.border }]}>
               <Ionicons name="lock-closed-outline" size={18} color={colors.mutedForeground} />
               <TextInput
-                style={[styles.input, { color: colors.foreground }]}
+                style={[styles.input, { color: colors.foreground }, webInput]}
                 value={password}
                 onChangeText={setPassword}
                 placeholder="Enter password"
@@ -198,7 +200,15 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     borderWidth: 1,
   },
-  input: { flex: 1, fontSize: 15, fontFamily: "Inter_400Regular", padding: 0 },
+  input: {
+    flex: 1,
+    fontSize: 15,
+    fontFamily: "Inter_400Regular",
+    padding: 0,
+    margin: 0,
+    borderWidth: 0,
+    backgroundColor: "transparent",
+  },
   forgotWrap: { alignSelf: "flex-end" },
   forgotText: { fontSize: 13, fontFamily: "Inter_600SemiBold" },
   loginBtn: {

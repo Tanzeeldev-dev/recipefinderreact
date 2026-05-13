@@ -12,6 +12,8 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useColors } from "@/hooks/useColors";
 
+const webInput = Platform.OS === "web" ? ({ outlineWidth: 0 } as any) : {};
+
 export default function ForgotPasswordScreen() {
   const colors = useColors();
   const insets = useSafeAreaInsets();
@@ -49,20 +51,18 @@ export default function ForgotPasswordScreen() {
             Enter your email and we'll send you a reset link
           </Text>
 
-          <View style={styles.field}>
-            <View style={[styles.inputWrap, { backgroundColor: colors.muted, borderColor: colors.border }]}>
-              <Ionicons name="mail-outline" size={18} color={colors.mutedForeground} />
-              <TextInput
-                style={[styles.input, { color: colors.foreground }]}
-                value={email}
-                onChangeText={setEmail}
-                placeholder="your@email.com"
-                placeholderTextColor={colors.mutedForeground}
-                keyboardType="email-address"
-                autoCapitalize="none"
-                autoCorrect={false}
-              />
-            </View>
+          <View style={[styles.inputWrap, { backgroundColor: colors.muted, borderColor: colors.border }]}>
+            <Ionicons name="mail-outline" size={18} color={colors.mutedForeground} />
+            <TextInput
+              style={[styles.input, { color: colors.foreground }, webInput]}
+              value={email}
+              onChangeText={setEmail}
+              placeholder="your@email.com"
+              placeholderTextColor={colors.mutedForeground}
+              keyboardType="email-address"
+              autoCapitalize="none"
+              autoCorrect={false}
+            />
           </View>
 
           <Pressable
@@ -82,7 +82,8 @@ export default function ForgotPasswordScreen() {
           </View>
           <Text style={[styles.title, { color: colors.foreground }]}>Check your email</Text>
           <Text style={[styles.subtitle, { color: colors.mutedForeground }]}>
-            We've sent a password reset link to{"\n"}<Text style={{ color: colors.primary, fontFamily: "Inter_600SemiBold" }}>{email}</Text>
+            We've sent a password reset link to{"\n"}
+            <Text style={{ color: colors.primary, fontFamily: "Inter_600SemiBold" }}>{email}</Text>
           </Text>
           <Pressable
             onPress={() => router.back()}
@@ -106,9 +107,26 @@ const styles = StyleSheet.create({
   iconWrap: { width: 88, height: 88, borderRadius: 44, alignItems: "center", justifyContent: "center", marginBottom: 8 },
   title: { fontSize: 24, fontFamily: "Inter_700Bold", textAlign: "center" },
   subtitle: { fontSize: 15, fontFamily: "Inter_400Regular", textAlign: "center", lineHeight: 22 },
-  field: { width: "100%", marginTop: 8 },
-  inputWrap: { flexDirection: "row", alignItems: "center", gap: 10, paddingHorizontal: 14, paddingVertical: 14, borderRadius: 14, borderWidth: 1 },
-  input: { flex: 1, fontSize: 15, fontFamily: "Inter_400Regular", padding: 0 },
+  inputWrap: {
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    paddingHorizontal: 14,
+    paddingVertical: 14,
+    borderRadius: 14,
+    borderWidth: 1,
+    marginTop: 8,
+  },
+  input: {
+    flex: 1,
+    fontSize: 15,
+    fontFamily: "Inter_400Regular",
+    padding: 0,
+    margin: 0,
+    borderWidth: 0,
+    backgroundColor: "transparent",
+  },
   resetBtn: { width: "100%", paddingVertical: 16, borderRadius: 14, alignItems: "center", marginTop: 8 },
   resetBtnText: { color: "#fff", fontSize: 16, fontFamily: "Inter_700Bold" },
 });
