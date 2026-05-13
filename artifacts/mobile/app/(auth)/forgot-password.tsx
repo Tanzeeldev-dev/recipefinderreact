@@ -3,6 +3,7 @@ import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
+  Dimensions,
   Platform,
   Pressable,
   StyleSheet,
@@ -13,6 +14,7 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useColors } from "@/hooks/useColors";
 
+const IMG_SIZE = Dimensions.get("window").width * 0.65;
 const webInput = Platform.OS === "web" ? ({ outlineWidth: 0 } as any) : {};
 
 export default function ForgotPasswordScreen() {
@@ -46,7 +48,7 @@ export default function ForgotPasswordScreen() {
         <View style={styles.content}>
           <Image
             source={{ uri: "https://i.postimg.cc/C5WKG7JN/i3.png" }}
-            style={styles.chefImage}
+            style={{ width: IMG_SIZE, height: IMG_SIZE, marginBottom: 8 }}
             contentFit="contain"
           />
           <Text style={[styles.title, { color: colors.foreground }]}>Verify Your Email</Text>
@@ -82,7 +84,7 @@ export default function ForgotPasswordScreen() {
         <View style={styles.content}>
           <Image
             source={{ uri: "https://i.postimg.cc/C5WKG7JN/i3.png" }}
-            style={styles.chefImage}
+            style={{ width: IMG_SIZE, height: IMG_SIZE, marginBottom: 8 }}
             contentFit="contain"
           />
           <Text style={[styles.title, { color: colors.foreground }]}>Check your email</Text>
@@ -109,7 +111,6 @@ const styles = StyleSheet.create({
   container: { flex: 1, paddingHorizontal: 24 },
   backBtn: { width: 40, height: 40, justifyContent: "center", marginBottom: 32 },
   content: { alignItems: "center", gap: 16 },
-  chefImage: { width: 180, height: 180, marginBottom: 8 },
   title: { fontSize: 24, fontFamily: "Figtree_700Bold", textAlign: "center" },
   subtitle: { fontSize: 15, fontFamily: "Figtree_400Regular", textAlign: "center", lineHeight: 22 },
   inputWrap: {

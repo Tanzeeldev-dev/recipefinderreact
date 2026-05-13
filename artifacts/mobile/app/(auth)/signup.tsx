@@ -3,6 +3,7 @@ import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
+  Dimensions,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -16,6 +17,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useAuth } from "@/context/AuthContext";
 import { useColors } from "@/hooks/useColors";
 
+const IMG_SIZE = Dimensions.get("window").width * 0.65;
 const webInput = Platform.OS === "web" ? ({ outlineWidth: 0 } as any) : {};
 
 export default function SignupScreen() {
@@ -79,7 +81,7 @@ export default function SignupScreen() {
         <View style={styles.header}>
           <Image
             source={{ uri: "https://i.postimg.cc/3NPwX19Z/i2.png" }}
-            style={styles.chefImage}
+            style={{ width: IMG_SIZE, height: IMG_SIZE, marginBottom: 12 }}
             contentFit="contain"
           />
           <Text style={[styles.title, { color: colors.foreground }]}>Create Account</Text>
@@ -196,7 +198,6 @@ const styles = StyleSheet.create({
   content: { paddingHorizontal: 24 },
   backBtn: { width: 40, height: 40, justifyContent: "center", marginBottom: 16 },
   header: { alignItems: "center", marginBottom: 28 },
-  chefImage: { width: 180, height: 180, marginBottom: 12 },
   title: { fontSize: 26, fontFamily: "Figtree_700Bold", marginBottom: 6 },
   subtitle: { fontSize: 15, fontFamily: "Figtree_400Regular" },
   form: { gap: 16 },

@@ -3,6 +3,7 @@ import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
+  Dimensions,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -16,6 +17,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useAuth } from "@/context/AuthContext";
 import { useColors } from "@/hooks/useColors";
 
+const IMG_SIZE = Dimensions.get("window").width * 0.65;
 const webInput = Platform.OS === "web" ? ({ outlineWidth: 0 } as any) : {};
 
 export default function LoginScreen() {
@@ -65,7 +67,7 @@ export default function LoginScreen() {
         <View style={styles.header}>
           <Image
             source={{ uri: "https://i.postimg.cc/PJBqWyKy/i1.png" }}
-            style={styles.chefImage}
+            style={{ width: IMG_SIZE, height: IMG_SIZE, marginBottom: 16 }}
             contentFit="contain"
           />
           <Text style={[styles.title, { color: colors.foreground }]}>Welcome Back</Text>
@@ -171,7 +173,6 @@ const styles = StyleSheet.create({
   container: { flex: 1 },
   content: { paddingHorizontal: 24 },
   header: { alignItems: "center", marginBottom: 36 },
-  chefImage: { width: 180, height: 180, marginBottom: 16 },
   title: { fontSize: 26, fontFamily: "Figtree_700Bold", marginBottom: 6 },
   subtitle: { fontSize: 15, fontFamily: "Figtree_400Regular" },
   form: { gap: 16 },
