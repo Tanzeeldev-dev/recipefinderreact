@@ -1,0 +1,91 @@
+I have an existing React Native Expo Recipe Finder app repo.
+
+Upgrade the existing app. Do NOT create a new project. Do NOT create backend.
+
+Make it a full premium Recipe Finder + Recipe Maker app.
+
+Add/complete features:
+- Splash screen
+- Onboarding screens
+- Login screen
+- Signup screen
+- Forgot password screen
+- Home screen
+- Recipe search
+- Category filters
+- Recipe detail screen
+- Favorites screen
+- Profile screen
+- Edit profile
+- Settings screen
+- Dark/light mode
+- Add/Create recipe screen
+- Recipe Maker screen
+- My Recipes screen
+- Meal planner
+- Shopping list
+- Cooking timer
+- Recipe rating
+- Recipe reviews/comments demo
+- Recently viewed recipes
+- Popular recipes section
+- Featured recipes section
+- Recommended recipes section
+- Recipe of the day
+- Calories/nutrition info
+- Serving size adjuster
+- Ingredients quantity adjuster
+- Difficulty level
+- Cooking time
+- Prep time
+- Cuisine type
+- Share recipe button
+- Print/export recipe option for web
+- Add ingredients to shopping list
+- Add recipe to meal planner
+- Mark cooking steps as done
+- Notes for each recipe
+- Delete/edit created recipes
+- Empty states and loading states
+
+Recipe Maker:
+- User can create own recipe
+- Add title, image URL, category, cuisine, prep time, cook time, servings, calories, difficulty
+- Add multiple ingredients
+- Add multiple cooking steps
+- Add notes
+- Save recipe locally
+- Edit recipe
+- Delete recipe
+- Show saved recipes in My Recipes
+- Add created recipes to favorites, meal planner, and shopping list
+
+Use:
+- Local static recipe data only
+- AsyncStorage for auth, favorites, created recipes, shopping list, meal planner, notes, recently viewed
+- React Navigation
+- Expo Vector Icons
+- Clean reusable components
+
+Important:
+- Keep existing app code and improve it
+- Do NOT create backend
+- Do NOT use database
+- Do NOT use API
+- All buttons must work
+- Search must work
+- Filters must work
+- Login/signup/logout must work locally
+- Favorites must save/remove locally
+- Recipe Maker must save/edit/delete locally
+- Shopping list must save/delete/check items locally
+- Meal planner must save/remove recipes locally
+- Dark/light mode must work
+- App must run with:
+  npm install
+  npx expo start
+- Expo Go QR code must work
+- Web version must work with:
+  npx expo start --web
+- Add README with setup, GitHub push, Expo QR, and web deploy steps
+- Fix all errors in the existing app

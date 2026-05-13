@@ -1,7 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import {
   Dimensions,
-  FlatList,
   Platform,
   Pressable,
   ScrollView,
@@ -20,8 +19,10 @@ import {
 import { useColors } from "@/hooks/useColors";
 import { RecipeCard } from "@/components/RecipeCard";
 import { CategoryCard } from "@/components/CategoryCard";
-import { SkeletonRecipeCard } from "@/components/SkeletonCard";
 import { useRouter } from "expo-router";
+import { useAuth } from "@/context/AuthContext";
+import { useRecentlyViewed } from "@/context/RecentlyViewedContext";
+import { useRecipeMaker } from "@/context/RecipeMakerContext";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
@@ -29,19 +30,23 @@ export default function HomeScreen() {
   const colors = useColors();
   const insets = useSafeAreaInsets();
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(true);
+  const { user } = useAuth();
+  const { recentIds } = useRecentlyViewed();
+  const { userRecipes } = useRecipeMaker();
   const [selectedCategory, setSelectedCategory] = useState("all");
+
   const featuredRecipes = getFeaturedRecipes();
-
-  useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 600);
-    return () => clearTimeout(timer);
-  }, []);
-
+  const recipeOfTheDay = RECIPES[new Date().getDate() % RECIPES.length];
   const filteredRecipes =
     selectedCategory === "all"
       ? RECIPES.slice(0, 20)
       : getRecipesByCategory(selectedCategory);
+
+  const allRecipes = [...RECIPES, ...userRecipes];
+  const recentRecipes = recentIds
+    .map((id) => allRecipes.find((r) => r.id === id))
+    .filter(Boolean)
+    .slice(0, 8) as typeof RECIPES;
 
   const displayedCategories = CATEGORIES.slice(0, 7);
 
@@ -54,14 +59,15 @@ export default function HomeScreen() {
     ).length;
   };
 
+  const firstName = user?.name?.split(" ")[0] ?? "Chef";
+
   return (
     <ScrollView
       style={[styles.container, { backgroundColor: colors.background }]}
       contentContainerStyle={[
         styles.content,
         {
-          paddingTop:
-            insets.top + (Platform.OS === "web" ? 67 : 0),
+          paddingTop: insets.top + (Platform.OS === "web" ? 67 : 0),
           paddingBottom: 100 + (Platform.OS === "web" ? 34 : 0),
         },
       ]}
@@ -70,7 +76,7 @@ export default function HomeScreen() {
       <View style={styles.header}>
         <View>
           <Text style={[styles.greeting, { color: colors.mutedForeground }]}>
-            Good morning
+            Hello, {firstName}
           </Text>
           <Text style={[styles.tagline, { color: colors.foreground }]}>
             What are you{"\n"}cooking today?
@@ -84,52 +90,55 @@ export default function HomeScreen() {
         </Pressable>
       </View>
 
+      {/* Recipe of the Day */}
+      <View style={styles.section}>
+        <View style={styles.sectionHeader}>
+          <Text style={[styles.sectionTitle, { color: colors.foreground }]}>
+            Recipe of the Day
+          </Text>
+          <View style={[styles.dayBadge, { backgroundColor: colors.primary + "18" }]}>
+            <Text style={[styles.dayBadgeText, { color: colors.primary }]}>Daily Pick</Text>
+          </View>
+        </View>
+        {recipeOfTheDay && (
+          <View style={{ paddingHorizontal: 16 }}>
+            <RecipeCard recipe={recipeOfTheDay} variant="featured" />
+          </View>
+        )}
+      </View>
+
+      {/* Featured */}
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
           <Text style={[styles.sectionTitle, { color: colors.foreground }]}>
             Featured
           </Text>
           <Pressable onPress={() => router.push("/(tabs)/search")}>
-            <Text style={[styles.seeAll, { color: colors.primary }]}>
-              See all
-            </Text>
+            <Text style={[styles.seeAll, { color: colors.primary }]}>See all</Text>
           </Pressable>
         </View>
-        {isLoading ? (
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.featuredScroll}
-          >
-            {[1, 2, 3].map((i) => (
-              <SkeletonRecipeCard key={i} variant="featured" />
-            ))}
-          </ScrollView>
-        ) : (
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.featuredScroll}
-            decelerationRate="fast"
-            snapToInterval={SCREEN_WIDTH * 0.7 + 12}
-            snapToAlignment="start"
-          >
-            {featuredRecipes.map((recipe) => (
-              <RecipeCard key={recipe.id} recipe={recipe} variant="featured" />
-            ))}
-          </ScrollView>
-        )}
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.featuredScroll}
+          decelerationRate="fast"
+          snapToInterval={SCREEN_WIDTH * 0.7 + 12}
+          snapToAlignment="start"
+        >
+          {featuredRecipes.map((recipe) => (
+            <RecipeCard key={recipe.id} recipe={recipe} variant="featured" />
+          ))}
+        </ScrollView>
       </View>
 
+      {/* Categories */}
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
           <Text style={[styles.sectionTitle, { color: colors.foreground }]}>
             Categories
           </Text>
-          <Pressable onPress={() => router.push("/(tabs)/categories")}>
-            <Text style={[styles.seeAll, { color: colors.primary }]}>
-              See all
-            </Text>
+          <Pressable onPress={() => router.push("/(tabs)/search")}>
+            <Text style={[styles.seeAll, { color: colors.primary }]}>Browse all</Text>
           </Pressable>
         </View>
         <ScrollView
@@ -150,6 +159,27 @@ export default function HomeScreen() {
         </ScrollView>
       </View>
 
+      {/* Recently Viewed */}
+      {recentRecipes.length > 0 && (
+        <View style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <Text style={[styles.sectionTitle, { color: colors.foreground }]}>
+              Recently Viewed
+            </Text>
+          </View>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.featuredScroll}
+          >
+            {recentRecipes.map((recipe) => (
+              <RecipeCard key={recipe.id} recipe={recipe} variant="featured" />
+            ))}
+          </ScrollView>
+        </View>
+      )}
+
+      {/* Popular Recipes */}
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
           <Text style={[styles.sectionTitle, { color: colors.foreground }]}>
@@ -161,13 +191,7 @@ export default function HomeScreen() {
             {filteredRecipes.length} recipes
           </Text>
         </View>
-        {isLoading ? (
-          <View style={styles.compactGrid}>
-            {[1, 2, 3, 4].map((i) => (
-              <SkeletonRecipeCard key={i} variant="compact" />
-            ))}
-          </View>
-        ) : filteredRecipes.length === 0 ? (
+        {filteredRecipes.length === 0 ? (
           <View style={styles.emptyState}>
             <Ionicons name="restaurant-outline" size={48} color={colors.mutedForeground} />
             <Text style={[styles.emptyText, { color: colors.mutedForeground }]}>
@@ -187,12 +211,8 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  content: {
-    paddingHorizontal: 0,
-  },
+  container: { flex: 1 },
+  content: { paddingHorizontal: 0 },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -201,69 +221,19 @@ const styles = StyleSheet.create({
     paddingTop: 16,
     paddingBottom: 8,
   },
-  greeting: {
-    fontSize: 14,
-    fontFamily: "Inter_500Medium",
-    marginBottom: 4,
-  },
-  tagline: {
-    fontSize: 26,
-    fontFamily: "Inter_700Bold",
-    lineHeight: 32,
-  },
-  searchIconBtn: {
-    width: 46,
-    height: 46,
-    borderRadius: 23,
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 4,
-  },
-  section: {
-    marginTop: 24,
-  },
-  sectionHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingHorizontal: 20,
-    marginBottom: 14,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontFamily: "Inter_700Bold",
-  },
-  seeAll: {
-    fontSize: 13,
-    fontFamily: "Inter_600SemiBold",
-  },
-  recipeCount: {
-    fontSize: 13,
-    fontFamily: "Inter_400Regular",
-  },
-  featuredScroll: {
-    paddingLeft: 16,
-    paddingRight: 20,
-    gap: 12,
-  },
-  categoryScroll: {
-    paddingHorizontal: 20,
-  },
-  compactGrid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    paddingHorizontal: 16,
-    gap: 12,
-  },
-  emptyState: {
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 48,
-    gap: 12,
-  },
-  emptyText: {
-    fontSize: 15,
-    fontFamily: "Inter_400Regular",
-    textAlign: "center",
-  },
+  greeting: { fontSize: 14, fontFamily: "Inter_500Medium", marginBottom: 4 },
+  tagline: { fontSize: 26, fontFamily: "Inter_700Bold", lineHeight: 32 },
+  searchIconBtn: { width: 46, height: 46, borderRadius: 23, alignItems: "center", justifyContent: "center", marginTop: 4 },
+  section: { marginTop: 24 },
+  sectionHeader: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingHorizontal: 20, marginBottom: 14 },
+  sectionTitle: { fontSize: 18, fontFamily: "Inter_700Bold" },
+  seeAll: { fontSize: 13, fontFamily: "Inter_600SemiBold" },
+  recipeCount: { fontSize: 13, fontFamily: "Inter_400Regular" },
+  dayBadge: { paddingHorizontal: 10, paddingVertical: 4, borderRadius: 20 },
+  dayBadgeText: { fontSize: 11, fontFamily: "Inter_600SemiBold" },
+  featuredScroll: { paddingLeft: 16, paddingRight: 20, gap: 12 },
+  categoryScroll: { paddingHorizontal: 20 },
+  compactGrid: { flexDirection: "row", flexWrap: "wrap", paddingHorizontal: 16, gap: 12 },
+  emptyState: { alignItems: "center", justifyContent: "center", paddingVertical: 48, gap: 12 },
+  emptyText: { fontSize: 15, fontFamily: "Inter_400Regular", textAlign: "center" },
 });
