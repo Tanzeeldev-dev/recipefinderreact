@@ -4,6 +4,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
 import {
+  ActivityIndicator,
   Dimensions,
   Platform,
   Pressable,
@@ -16,11 +17,11 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useFavorites } from "@/context/FavoritesContext";
 import { useShoppingList } from "@/context/ShoppingListContext";
-import { useMealPlanner } from "@/context/MealPlannerContext";
 import { useRecentlyViewed } from "@/context/RecentlyViewedContext";
 import { useRecipeMaker } from "@/context/RecipeMakerContext";
-import { getRecipeById, RECIPES } from "@/data/recipes";
+import { getRecipeById } from "@/data/recipes";
 import { useColors } from "@/hooks/useColors";
+import { useMealById } from "@/hooks/useMealDB";
 import * as Haptics from "expo-haptics";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
@@ -33,7 +34,6 @@ export default function RecipeDetailScreen() {
   const router = useRouter();
   const { isFavorite, toggleFavorite } = useFavorites();
   const { addItemsFromRecipe } = useShoppingList();
-  const { addToMealPlan } = useMealPlanner();
   const { addRecentlyViewed } = useRecentlyViewed();
   const { getRecipeById: getUserRecipe } = useRecipeMaker();
 
@@ -42,30 +42,15 @@ export default function RecipeDetailScreen() {
   const [doneSteps, setDoneSteps] = useState<Set<number>>(new Set());
   const [shoppingAdded, setShoppingAdded] = useState(false);
 
-  const staticRecipe = id ? getRecipeById(id) : undefined;
-  const userRecipe = id ? getUserRecipe(id) : undefined;
-  const recipe = staticRecipe ?? userRecipe;
+  const localRecipe = id ? (getRecipeById(id) ?? getUserRecipe(id)) : undefined;
+  const isApiId = !localRecipe && !!id;
+  const { data: apiRecipe, isLoading } = useMealById(isApiId ? id : undefined);
+
+  const recipe = localRecipe ?? apiRecipe ?? undefined;
 
   useEffect(() => {
-    if (id) {
-      addRecentlyViewed(id);
-    }
+    if (id) addRecentlyViewed(id);
   }, [id]);
-
-  if (!recipe) {
-    return (
-      <View style={[styles.notFound, { backgroundColor: colors.background }]}>
-        <Ionicons name="alert-circle-outline" size={56} color={colors.mutedForeground} />
-        <Text style={[styles.notFoundText, { color: colors.foreground }]}>Recipe not found</Text>
-        <Pressable onPress={() => router.back()} style={[styles.backLinkBtn, { backgroundColor: colors.primary }]}>
-          <Text style={styles.backLinkText}>Go Back</Text>
-        </Pressable>
-      </View>
-    );
-  }
-
-  const favorited = isFavorite(recipe.id);
-  const topPad = insets.top + (Platform.OS === "web" ? 67 : 0);
 
   const toggleStep = (index: number) => {
     const next = new Set(doneSteps);
@@ -76,6 +61,7 @@ export default function RecipeDetailScreen() {
   };
 
   const handleAddToShoppingList = async () => {
+    if (!recipe) return;
     await addItemsFromRecipe(recipe.ingredients, recipe.id, recipe.title);
     setShoppingAdded(true);
     await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
@@ -83,6 +69,7 @@ export default function RecipeDetailScreen() {
   };
 
   const handleShare = async () => {
+    if (!recipe) return;
     try {
       await Share.share({
         title: recipe.title,
@@ -91,6 +78,35 @@ export default function RecipeDetailScreen() {
     } catch {}
   };
 
+  const topPad = insets.top + (Platform.OS === "web" ? 67 : 0);
+
+  if (isLoading) {
+    return (
+      <View style={[styles.center, { backgroundColor: colors.background }]}>
+        <ActivityIndicator size="large" color={colors.primary} />
+        <Text style={[styles.loadingText, { color: colors.mutedForeground }]}>
+          Loading recipe...
+        </Text>
+      </View>
+    );
+  }
+
+  if (!recipe) {
+    return (
+      <View style={[styles.notFound, { backgroundColor: colors.background }]}>
+        <Ionicons name="alert-circle-outline" size={56} color={colors.mutedForeground} />
+        <Text style={[styles.notFoundText, { color: colors.foreground }]}>Recipe not found</Text>
+        <Pressable
+          onPress={() => router.back()}
+          style={[styles.backLinkBtn, { backgroundColor: colors.primary }]}
+        >
+          <Text style={styles.backLinkText}>Go Back</Text>
+        </Pressable>
+      </View>
+    );
+  }
+
+  const favorited = isFavorite(recipe.id);
   const adjustedServings = Math.round(recipe.servings * servingMultiplier);
 
   return (
@@ -123,16 +139,17 @@ export default function RecipeDetailScreen() {
                 <Ionicons name="share-outline" size={20} color="#fff" />
               </Pressable>
               <Pressable onPress={() => toggleFavorite(recipe.id)} style={styles.heroBtn} hitSlop={8}>
-                <Ionicons name={favorited ? "heart" : "heart-outline"} size={22} color={favorited ? "#7C3AED" : "#fff"} />
+                <Ionicons
+                  name={favorited ? "heart" : "heart-outline"}
+                  size={22}
+                  color={favorited ? "#A78BFA" : "#fff"}
+                />
               </Pressable>
             </View>
           </View>
           <View style={styles.heroBadges}>
             <View style={[styles.badge, { backgroundColor: colors.primary }]}>
               <Text style={styles.badgeText}>{recipe.category}</Text>
-            </View>
-            <View style={[styles.badge, { backgroundColor: recipe.difficulty === "Easy" ? "#5B21B6" : recipe.difficulty === "Medium" ? "#FF9800" : "#F44336" }]}>
-              <Text style={styles.badgeText}>{recipe.difficulty}</Text>
             </View>
           </View>
         </View>
@@ -143,7 +160,7 @@ export default function RecipeDetailScreen() {
 
           <View style={styles.ratingRow}>
             <Ionicons name="star" size={16} color="#FFB300" />
-            <Text style={[styles.ratingText, { color: colors.foreground }]}>{recipe.rating || "New"}</Text>
+            <Text style={[styles.ratingText, { color: colors.foreground }]}>{recipe.rating}</Text>
             <Text style={[styles.ratingLabel, { color: colors.mutedForeground }]}>Rating</Text>
           </View>
 
@@ -167,9 +184,7 @@ export default function RecipeDetailScreen() {
               >
                 <Ionicons name="remove" size={16} color={colors.foreground} />
               </Pressable>
-              <Text style={[styles.servingValue, { color: colors.foreground }]}>
-                {adjustedServings}
-              </Text>
+              <Text style={[styles.servingValue, { color: colors.foreground }]}>{adjustedServings}</Text>
               <Pressable
                 onPress={() => setServingMultiplier(servingMultiplier + 0.5)}
                 style={[styles.servingBtn, { backgroundColor: colors.card, borderColor: colors.border }]}
@@ -180,7 +195,11 @@ export default function RecipeDetailScreen() {
             </View>
           </View>
 
-          <Text style={[styles.description, { color: colors.mutedForeground }]}>{recipe.description}</Text>
+          {recipe.description.length > 0 && (
+            <Text style={[styles.description, { color: colors.mutedForeground }]}>
+              {recipe.description}
+            </Text>
+          )}
 
           {/* Action Buttons */}
           <View style={styles.actionBtns}>
@@ -189,13 +208,17 @@ export default function RecipeDetailScreen() {
               style={({ pressed }) => [
                 styles.actionBtn,
                 {
-                  backgroundColor: shoppingAdded ? "#5B21B6" : colors.secondary,
-                  borderColor: shoppingAdded ? "#5B21B6" : colors.border,
+                  backgroundColor: shoppingAdded ? colors.primary : colors.secondary,
+                  borderColor: shoppingAdded ? colors.primary : colors.border,
                   opacity: pressed ? 0.85 : 1,
                 },
               ]}
             >
-              <Ionicons name={shoppingAdded ? "checkmark" : "cart-outline"} size={18} color={shoppingAdded ? "#fff" : colors.accent} />
+              <Ionicons
+                name={shoppingAdded ? "checkmark" : "cart-outline"}
+                size={18}
+                color={shoppingAdded ? "#fff" : colors.accent}
+              />
               <Text style={[styles.actionBtnText, { color: shoppingAdded ? "#fff" : colors.accent }]}>
                 {shoppingAdded ? "Added!" : "Shopping List"}
               </Text>
@@ -213,7 +236,7 @@ export default function RecipeDetailScreen() {
           </View>
 
           {/* Tabs */}
-          <View style={styles.tabBar}>
+          <View style={[styles.tabBar, { borderBottomColor: colors.border }]}>
             {(["ingredients", "steps"] as const).map((tab) => (
               <Pressable
                 key={tab}
@@ -223,10 +246,23 @@ export default function RecipeDetailScreen() {
                   activeTab === tab && { borderBottomColor: colors.primary, borderBottomWidth: 2 },
                 ]}
               >
-                <Text style={[styles.tabText, { color: activeTab === tab ? colors.primary : colors.mutedForeground }]}>
+                <Text
+                  style={[
+                    styles.tabText,
+                    { color: activeTab === tab ? colors.primary : colors.mutedForeground },
+                  ]}
+                >
                   {tab === "ingredients" ? "Ingredients" : "Instructions"}
                 </Text>
-                <Text style={[styles.tabCount, { backgroundColor: activeTab === tab ? colors.primary : colors.muted, color: activeTab === tab ? "#fff" : colors.mutedForeground }]}>
+                <Text
+                  style={[
+                    styles.tabCount,
+                    {
+                      backgroundColor: activeTab === tab ? colors.primary : colors.muted,
+                      color: activeTab === tab ? "#fff" : colors.mutedForeground,
+                    },
+                  ]}
+                >
                   {tab === "ingredients" ? recipe.ingredients.length : recipe.steps.length}
                 </Text>
               </Pressable>
@@ -235,32 +271,57 @@ export default function RecipeDetailScreen() {
 
           {activeTab === "ingredients" ? (
             <View style={styles.list}>
-              {recipe.ingredients.map((ing, index) => (
-                <View key={index} style={[styles.ingredientItem, { borderBottomColor: colors.border }]}>
-                  <View style={[styles.ingredientDot, { backgroundColor: colors.primary }]} />
-                  <Text style={[styles.ingredientText, { color: colors.foreground }]}>{ing}</Text>
-                </View>
-              ))}
+              {recipe.ingredients.length === 0 ? (
+                <Text style={[styles.emptyTab, { color: colors.mutedForeground }]}>
+                  Tap the recipe to load full ingredients
+                </Text>
+              ) : (
+                recipe.ingredients.map((ing, index) => (
+                  <View key={index} style={[styles.ingredientItem, { borderBottomColor: colors.border }]}>
+                    <View style={[styles.ingredientDot, { backgroundColor: colors.primary }]} />
+                    <Text style={[styles.ingredientText, { color: colors.foreground }]}>{ing}</Text>
+                  </View>
+                ))
+              )}
             </View>
           ) : (
             <View style={styles.list}>
-              {recipe.steps.map((step, index) => {
-                const done = doneSteps.has(index);
-                return (
-                  <Pressable key={index} onPress={() => toggleStep(index)} style={styles.stepItem}>
-                    <View style={[styles.stepNumber, { backgroundColor: done ? "#5B21B6" : colors.primary }]}>
-                      {done ? (
-                        <Ionicons name="checkmark" size={14} color="#fff" />
-                      ) : (
-                        <Text style={styles.stepNumberText}>{index + 1}</Text>
-                      )}
-                    </View>
-                    <Text style={[styles.stepText, { color: done ? colors.mutedForeground : colors.foreground, textDecorationLine: done ? "line-through" : "none" }]}>
-                      {step}
-                    </Text>
-                  </Pressable>
-                );
-              })}
+              {recipe.steps.length === 0 ? (
+                <Text style={[styles.emptyTab, { color: colors.mutedForeground }]}>
+                  Tap the recipe to load full instructions
+                </Text>
+              ) : (
+                recipe.steps.map((step, index) => {
+                  const done = doneSteps.has(index);
+                  return (
+                    <Pressable key={index} onPress={() => toggleStep(index)} style={styles.stepItem}>
+                      <View
+                        style={[
+                          styles.stepNumber,
+                          { backgroundColor: done ? "#5B21B6" : colors.primary },
+                        ]}
+                      >
+                        {done ? (
+                          <Ionicons name="checkmark" size={14} color="#fff" />
+                        ) : (
+                          <Text style={styles.stepNumberText}>{index + 1}</Text>
+                        )}
+                      </View>
+                      <Text
+                        style={[
+                          styles.stepText,
+                          {
+                            color: done ? colors.mutedForeground : colors.foreground,
+                            textDecorationLine: done ? "line-through" : "none",
+                          },
+                        ]}
+                      >
+                        {step}
+                      </Text>
+                    </Pressable>
+                  );
+                })
+              )}
               {doneSteps.size > 0 && (
                 <Text style={[styles.progressText, { color: colors.mutedForeground }]}>
                   {doneSteps.size}/{recipe.steps.length} steps done
@@ -274,7 +335,17 @@ export default function RecipeDetailScreen() {
   );
 }
 
-function InfoChip({ icon, label, value, colors }: { icon: string; label: string; value: string; colors: any }) {
+function InfoChip({
+  icon,
+  label,
+  value,
+  colors,
+}: {
+  icon: string;
+  label: string;
+  value: string;
+  colors: any;
+}) {
   return (
     <View style={[styles.chip, { backgroundColor: colors.muted }]}>
       <Ionicons name={icon as any} size={18} color={colors.primary} />
@@ -286,12 +357,28 @@ function InfoChip({ icon, label, value, colors }: { icon: string; label: string;
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
+  center: { flex: 1, alignItems: "center", justifyContent: "center", gap: 12 },
+  loadingText: { fontSize: 14, fontFamily: "Figtree_400Regular" },
   heroContainer: { height: HERO_HEIGHT, position: "relative" },
   heroPlaceholder: { width: SCREEN_WIDTH, height: HERO_HEIGHT },
   heroImage: { width: SCREEN_WIDTH, height: HERO_HEIGHT },
-  heroButtons: { position: "absolute", left: 0, right: 0, flexDirection: "row", justifyContent: "space-between", paddingHorizontal: 16 },
+  heroButtons: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 16,
+  },
   heroBtnGroup: { flexDirection: "row", gap: 8 },
-  heroBtn: { width: 40, height: 40, borderRadius: 20, backgroundColor: "rgba(0,0,0,0.35)", alignItems: "center", justifyContent: "center" },
+  heroBtn: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: "rgba(0,0,0,0.35)",
+    alignItems: "center",
+    justifyContent: "center",
+  },
   heroBadges: { position: "absolute", bottom: 16, left: 16, flexDirection: "row", gap: 8 },
   badge: { paddingHorizontal: 12, paddingVertical: 5, borderRadius: 20 },
   badgeText: { color: "#fff", fontSize: 12, fontFamily: "Figtree_600SemiBold" },
@@ -304,16 +391,33 @@ const styles = StyleSheet.create({
   chip: { flex: 1, alignItems: "center", paddingVertical: 12, borderRadius: 14, gap: 4 },
   chipValue: { fontSize: 14, fontFamily: "Figtree_700Bold" },
   chipLabel: { fontSize: 11, fontFamily: "Figtree_400Regular" },
-  servingRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 16, paddingVertical: 10, borderRadius: 14, borderWidth: 1 },
+  servingRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 14,
+    borderWidth: 1,
+  },
   servingLabel: { fontSize: 13, fontFamily: "Figtree_500Medium" },
   servingControls: { flexDirection: "row", alignItems: "center", gap: 16 },
   servingBtn: { width: 30, height: 30, borderRadius: 15, alignItems: "center", justifyContent: "center", borderWidth: 1 },
   servingValue: { fontSize: 18, fontFamily: "Figtree_700Bold", minWidth: 24, textAlign: "center" },
   description: { fontSize: 14, fontFamily: "Figtree_400Regular", lineHeight: 22 },
   actionBtns: { flexDirection: "row", gap: 10 },
-  actionBtn: { flex: 1, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6, paddingVertical: 12, borderRadius: 12, borderWidth: 1 },
+  actionBtn: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 6,
+    paddingVertical: 12,
+    borderRadius: 12,
+    borderWidth: 1,
+  },
   actionBtnText: { fontSize: 13, fontFamily: "Figtree_600SemiBold" },
-  tabBar: { flexDirection: "row", borderBottomWidth: 1, borderBottomColor: "#E8E0D8" },
+  tabBar: { flexDirection: "row", borderBottomWidth: 1 },
   tab: { flex: 1, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8, paddingBottom: 12 },
   tabText: { fontSize: 15, fontFamily: "Figtree_600SemiBold" },
   tabCount: { fontSize: 11, fontFamily: "Figtree_700Bold", paddingHorizontal: 7, paddingVertical: 2, borderRadius: 10 },
@@ -326,6 +430,7 @@ const styles = StyleSheet.create({
   stepNumberText: { color: "#fff", fontSize: 13, fontFamily: "Figtree_700Bold" },
   stepText: { flex: 1, fontSize: 14, fontFamily: "Figtree_400Regular", lineHeight: 22 },
   progressText: { fontSize: 13, fontFamily: "Figtree_500Medium", textAlign: "center", paddingTop: 8 },
+  emptyTab: { fontSize: 14, fontFamily: "Figtree_400Regular", textAlign: "center", paddingVertical: 24 },
   notFound: { flex: 1, alignItems: "center", justifyContent: "center", gap: 16 },
   notFoundText: { fontSize: 18, fontFamily: "Figtree_700Bold" },
   backLinkBtn: { paddingHorizontal: 24, paddingVertical: 12, borderRadius: 12 },

@@ -1,5 +1,6 @@
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import {
+  ActivityIndicator,
   FlatList,
   Platform,
   StyleSheet,
@@ -8,34 +9,27 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
-import { CATEGORIES, searchRecipes } from "@/data/recipes";
 import { useColors } from "@/hooks/useColors";
 import { SearchBar } from "@/components/SearchBar";
 import { RecipeCard } from "@/components/RecipeCard";
-import { CategoryCard } from "@/components/CategoryCard";
-import { RECIPES } from "@/data/recipes";
+import { useSearchMeals, useMealsByCategory, useDBCategories } from "@/hooks/useMealDB";
+import { CATEGORY_META } from "@/lib/mealdb";
+import { Pressable } from "react-native";
 
 export default function SearchScreen() {
   const colors = useColors();
   const insets = useSafeAreaInsets();
   const [query, setQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
-  const results = useMemo(() => {
-    return searchRecipes(query, selectedCategory);
-  }, [query, selectedCategory]);
+  const { data: allCategories = [] } = useDBCategories();
+  const { data: searchResults = [], isLoading: searchLoading } = useSearchMeals(query);
+  const { data: categoryResults = [], isLoading: catLoading } = useMealsByCategory(
+    selectedCategory ?? "Chicken"
+  );
 
-  const getRecipeCountForCategory = (catId: string) => {
-    if (catId === "all") return RECIPES.length;
-    const cat = CATEGORIES.find((c) => c.id === catId);
-    if (!cat) return 0;
-    return RECIPES.filter(
-      (r) => r.category.toLowerCase() === cat.name.toLowerCase()
-    ).length;
-  };
-
-  const isSearching = query.length > 0;
-  const hasResults = results.length > 0;
+  const isLoading = query.length > 0 ? searchLoading : catLoading;
+  const results = query.length > 0 ? searchResults : categoryResults;
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
@@ -43,138 +37,129 @@ export default function SearchScreen() {
         style={[
           styles.header,
           {
-            paddingTop:
-              insets.top + (Platform.OS === "web" ? 67 : 12),
+            paddingTop: insets.top + (Platform.OS === "web" ? 67 : 12),
             backgroundColor: colors.background,
           },
         ]}
       >
-        <Text style={[styles.title, { color: colors.foreground }]}>
-          Discover
-        </Text>
+        <Text style={[styles.title, { color: colors.foreground }]}>Discover</Text>
         <Text style={[styles.subtitle, { color: colors.mutedForeground }]}>
-          Find your perfect recipe
+          Search thousands of real recipes
         </Text>
         <View style={styles.searchBarWrap}>
           <SearchBar
             value={query}
             onChangeText={setQuery}
-            placeholder="Search 28 recipes..."
+            placeholder="Search recipes..."
           />
         </View>
-        <View style={styles.categoriesWrap}>
-          {CATEGORIES.map((cat) => (
-            <CategoryCard
-              key={cat.id}
-              category={cat}
-              recipeCount={getRecipeCountForCategory(cat.id)}
-              onPress={() =>
-                setSelectedCategory((prev) =>
-                  prev === cat.id ? "all" : cat.id
-                )
-              }
-              variant="pill"
-              isSelected={selectedCategory === cat.id}
-            />
-          ))}
-        </View>
+
+        {/* Category pills */}
+        <FlatList
+          data={allCategories.slice(0, 10)}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={(item) => item.strCategory}
+          contentContainerStyle={styles.categoriesWrap}
+          renderItem={({ item }) => {
+            const meta = CATEGORY_META[item.strCategory];
+            const isSelected = selectedCategory === item.strCategory;
+            return (
+              <Pressable
+                onPress={() =>
+                  setSelectedCategory((prev) =>
+                    prev === item.strCategory ? null : item.strCategory
+                  )
+                }
+                style={[
+                  styles.pill,
+                  {
+                    backgroundColor: isSelected ? colors.primary : colors.card,
+                    borderColor: isSelected ? colors.primary : colors.border,
+                  },
+                ]}
+              >
+                <Text style={styles.pillEmoji}>{meta?.emoji ?? "🍽️"}</Text>
+                <Text
+                  style={[
+                    styles.pillText,
+                    { color: isSelected ? "#fff" : colors.foreground },
+                  ]}
+                >
+                  {item.strCategory}
+                </Text>
+              </Pressable>
+            );
+          }}
+        />
       </View>
 
-      <FlatList
-        data={results}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <RecipeCard recipe={item} variant="list" />
-        )}
-        contentContainerStyle={[
-          styles.listContent,
-          {
-            paddingBottom: 100 + (Platform.OS === "web" ? 34 : 0),
-          },
-        ]}
-        showsVerticalScrollIndicator={false}
-        scrollEnabled={results.length > 0}
-        ListHeaderComponent={
-          results.length > 0 ? (
-            <Text style={[styles.resultsText, { color: colors.mutedForeground }]}>
-              {results.length} recipe{results.length !== 1 ? "s" : ""} found
-            </Text>
-          ) : null
-        }
-        ListEmptyComponent={
-          <View style={styles.emptyState}>
-            <Ionicons
-              name={isSearching ? "search-outline" : "restaurant-outline"}
-              size={56}
-              color={colors.mutedForeground}
-            />
-            <Text style={[styles.emptyTitle, { color: colors.foreground }]}>
-              {isSearching ? "No recipes found" : "Start searching"}
-            </Text>
-            <Text style={[styles.emptySubtitle, { color: colors.mutedForeground }]}>
-              {isSearching
-                ? `No results for "${query}"`
-                : "Type a recipe name, ingredient, or category"}
-            </Text>
-          </View>
-        }
-      />
+      {isLoading ? (
+        <View style={styles.center}>
+          <ActivityIndicator size="large" color={colors.primary} />
+        </View>
+      ) : (
+        <FlatList
+          data={results}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => <RecipeCard recipe={item} variant="list" />}
+          contentContainerStyle={[
+            styles.listContent,
+            { paddingBottom: 100 + (Platform.OS === "web" ? 34 : 0) },
+          ]}
+          showsVerticalScrollIndicator={false}
+          ListHeaderComponent={
+            results.length > 0 ? (
+              <Text style={[styles.resultsText, { color: colors.mutedForeground }]}>
+                {results.length} recipe{results.length !== 1 ? "s" : ""} found
+              </Text>
+            ) : null
+          }
+          ListEmptyComponent={
+            <View style={styles.emptyState}>
+              <Ionicons
+                name={query.length > 0 ? "search-outline" : "restaurant-outline"}
+                size={56}
+                color={colors.mutedForeground}
+              />
+              <Text style={[styles.emptyTitle, { color: colors.foreground }]}>
+                {query.length > 0 ? "No recipes found" : "Start searching"}
+              </Text>
+              <Text style={[styles.emptySubtitle, { color: colors.mutedForeground }]}>
+                {query.length > 0
+                  ? `No results for "${query}"`
+                  : "Type a recipe name or pick a category"}
+              </Text>
+            </View>
+          }
+        />
+      )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  header: {
-    paddingHorizontal: 20,
-    paddingBottom: 12,
-  },
-  title: {
-    fontSize: 28,
-    fontFamily: "Figtree_700Bold",
-    marginBottom: 2,
-  },
-  subtitle: {
-    fontSize: 14,
-    fontFamily: "Figtree_400Regular",
-    marginBottom: 16,
-  },
-  searchBarWrap: {
-    marginBottom: 14,
-  },
-  categoriesWrap: {
+  container: { flex: 1 },
+  header: { paddingHorizontal: 20, paddingBottom: 12 },
+  title: { fontSize: 28, fontFamily: "Figtree_700Bold", marginBottom: 2 },
+  subtitle: { fontSize: 14, fontFamily: "Figtree_400Regular", marginBottom: 16 },
+  searchBarWrap: { marginBottom: 14 },
+  categoriesWrap: { gap: 8, paddingBottom: 4 },
+  pill: {
     flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 8,
-    marginBottom: 4,
-  },
-  listContent: {
-    paddingHorizontal: 20,
-    paddingTop: 8,
-  },
-  resultsText: {
-    fontSize: 13,
-    fontFamily: "Figtree_500Medium",
-    marginBottom: 12,
-  },
-  emptyState: {
     alignItems: "center",
-    justifyContent: "center",
-    paddingTop: 60,
-    gap: 12,
-    paddingHorizontal: 40,
+    gap: 5,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 20,
+    borderWidth: 1,
   },
-  emptyTitle: {
-    fontSize: 18,
-    fontFamily: "Figtree_700Bold",
-    textAlign: "center",
-  },
-  emptySubtitle: {
-    fontSize: 14,
-    fontFamily: "Figtree_400Regular",
-    textAlign: "center",
-    lineHeight: 20,
-  },
+  pillEmoji: { fontSize: 14 },
+  pillText: { fontSize: 12, fontFamily: "Figtree_600SemiBold" },
+  center: { flex: 1, alignItems: "center", justifyContent: "center" },
+  listContent: { paddingHorizontal: 20, paddingTop: 8 },
+  resultsText: { fontSize: 13, fontFamily: "Figtree_500Medium", marginBottom: 12 },
+  emptyState: { alignItems: "center", justifyContent: "center", paddingTop: 60, gap: 12, paddingHorizontal: 40 },
+  emptyTitle: { fontSize: 18, fontFamily: "Figtree_700Bold", textAlign: "center" },
+  emptySubtitle: { fontSize: 14, fontFamily: "Figtree_400Regular", textAlign: "center", lineHeight: 20 },
 });

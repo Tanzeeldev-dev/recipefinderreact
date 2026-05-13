@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+  ActivityIndicator,
   Dimensions,
   Platform,
   Pressable,
@@ -10,56 +11,34 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
-import {
-  CATEGORIES,
-  getFeaturedRecipes,
-  getRecipesByCategory,
-  RECIPES,
-} from "@/data/recipes";
 import { useColors } from "@/hooks/useColors";
 import { RecipeCard } from "@/components/RecipeCard";
-import { CategoryCard } from "@/components/CategoryCard";
 import { useRouter } from "expo-router";
 import { useAuth } from "@/context/AuthContext";
-import { useRecentlyViewed } from "@/context/RecentlyViewedContext";
-import { useRecipeMaker } from "@/context/RecipeMakerContext";
+import { useRandomMeal, useMealsByCategory, useDBCategories } from "@/hooks/useMealDB";
+import { CATEGORY_META } from "@/lib/mealdb";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
+
+const TOP_CATEGORIES = ["Chicken", "Lamb", "Pork", "Beef", "Seafood", "Dessert", "Vegetarian", "Pasta"];
 
 export default function HomeScreen() {
   const colors = useColors();
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const { user } = useAuth();
-  const { recentIds } = useRecentlyViewed();
-  const { userRecipes } = useRecipeMaker();
-  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedCategory, setSelectedCategory] = useState("Chicken");
 
-  const featuredRecipes = getFeaturedRecipes();
-  const recipeOfTheDay = RECIPES[new Date().getDate() % RECIPES.length];
-  const filteredRecipes =
-    selectedCategory === "all"
-      ? RECIPES.slice(0, 20)
-      : getRecipesByCategory(selectedCategory);
+  const { data: featuredMeal, isLoading: featuredLoading } = useRandomMeal();
+  const { data: categoryMeals = [], isLoading: mealsLoading } = useMealsByCategory(selectedCategory);
+  const { data: allCategories = [] } = useDBCategories();
 
-  const allRecipes = [...RECIPES, ...userRecipes];
-  const recentRecipes = recentIds
-    .map((id) => allRecipes.find((r) => r.id === id))
-    .filter(Boolean)
-    .slice(0, 8) as typeof RECIPES;
-
-  const displayedCategories = CATEGORIES.slice(0, 7);
-
-  const getRecipeCountForCategory = (catId: string) => {
-    if (catId === "all") return RECIPES.length;
-    const cat = CATEGORIES.find((c) => c.id === catId);
-    if (!cat) return 0;
-    return RECIPES.filter(
-      (r) => r.category.toLowerCase() === cat.name.toLowerCase()
-    ).length;
-  };
+  const visibleCategories = allCategories.length > 0
+    ? allCategories.filter((c) => TOP_CATEGORIES.includes(c.strCategory)).slice(0, 8)
+    : TOP_CATEGORIES.map((name) => ({ strCategory: name, strCategoryThumb: "", idCategory: name, strCategoryDescription: "" }));
 
   const firstName = user?.name?.split(" ")[0] ?? "Chef";
+  const topEmojis = ["🐑", "🐔", "🐷"];
 
   return (
     <ScrollView
@@ -73,10 +52,11 @@ export default function HomeScreen() {
       ]}
       showsVerticalScrollIndicator={false}
     >
+      {/* Header */}
       <View style={styles.header}>
         <View>
           <Text style={[styles.greeting, { color: colors.mutedForeground }]}>
-            Hello, {firstName}
+            Hello, {firstName} 👋
           </Text>
           <Text style={[styles.tagline, { color: colors.foreground }]}>
             What are you{"\n"}cooking today?
@@ -90,117 +70,103 @@ export default function HomeScreen() {
         </Pressable>
       </View>
 
-      {/* Recipe of the Day */}
-      <View style={styles.section}>
-        <View style={styles.sectionHeader}>
-          <Text style={[styles.sectionTitle, { color: colors.foreground }]}>
-            Recipe of the Day
-          </Text>
-          <View style={[styles.dayBadge, { backgroundColor: colors.primary + "18" }]}>
-            <Text style={[styles.dayBadgeText, { color: colors.primary }]}>Daily Pick</Text>
-          </View>
-        </View>
-        {recipeOfTheDay && (
-          <View style={{ paddingHorizontal: 16 }}>
-            <RecipeCard recipe={recipeOfTheDay} variant="featured" />
-          </View>
-        )}
+      {/* Animal emojis (category quick-picks) */}
+      <View style={styles.emojiRow}>
+        {topEmojis.map((emoji, i) => {
+          const cats = ["Lamb", "Chicken", "Pork"];
+          const cat = cats[i];
+          const isActive = selectedCategory === cat;
+          return (
+            <Pressable
+              key={cat}
+              onPress={() => setSelectedCategory(cat)}
+              style={[
+                styles.emojiBtn,
+                { backgroundColor: isActive ? colors.primary + "18" : "transparent" },
+              ]}
+            >
+              <Text style={styles.emojiText}>{emoji}</Text>
+            </Pressable>
+          );
+        })}
       </View>
 
       {/* Featured */}
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
-          <Text style={[styles.sectionTitle, { color: colors.foreground }]}>
-            Featured
-          </Text>
-          <Pressable onPress={() => router.push("/(tabs)/search")}>
-            <Text style={[styles.seeAll, { color: colors.primary }]}>See all</Text>
-          </Pressable>
+          <Text style={[styles.sectionTitle, { color: colors.foreground }]}>Featured</Text>
+          <View style={[styles.dayBadge, { backgroundColor: colors.primary + "18" }]}>
+            <Text style={[styles.dayBadgeText, { color: colors.primary }]}>Daily Pick</Text>
+          </View>
         </View>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.featuredScroll}
-          decelerationRate="fast"
-          snapToInterval={SCREEN_WIDTH * 0.7 + 12}
-          snapToAlignment="start"
-        >
-          {featuredRecipes.map((recipe) => (
-            <RecipeCard key={recipe.id} recipe={recipe} variant="featured" />
-          ))}
-        </ScrollView>
+        {featuredLoading ? (
+          <View style={styles.loadingBox}>
+            <ActivityIndicator color={colors.primary} size="large" />
+          </View>
+        ) : featuredMeal ? (
+          <View style={{ paddingHorizontal: 16 }}>
+            <RecipeCard recipe={{ ...featuredMeal, isFeatured: true }} variant="featured" />
+          </View>
+        ) : null}
       </View>
 
       {/* Categories */}
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
-          <Text style={[styles.sectionTitle, { color: colors.foreground }]}>
-            Categories
-          </Text>
-          <Pressable onPress={() => router.push("/(tabs)/search")}>
-            <Text style={[styles.seeAll, { color: colors.primary }]}>Browse all</Text>
-          </Pressable>
+          <Text style={[styles.sectionTitle, { color: colors.foreground }]}>Categories</Text>
         </View>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.categoryScroll}
         >
-          {displayedCategories.map((cat) => (
-            <CategoryCard
-              key={cat.id}
-              category={cat}
-              recipeCount={getRecipeCountForCategory(cat.id)}
-              onPress={() => setSelectedCategory(cat.id)}
-              variant="pill"
-              isSelected={selectedCategory === cat.id}
-            />
-          ))}
+          {visibleCategories.map((cat) => {
+            const meta = CATEGORY_META[cat.strCategory];
+            const isSelected = selectedCategory === cat.strCategory;
+            return (
+              <Pressable
+                key={cat.strCategory}
+                onPress={() => setSelectedCategory(cat.strCategory)}
+                style={[
+                  styles.categoryPill,
+                  {
+                    backgroundColor: isSelected ? colors.primary : colors.card,
+                    borderColor: isSelected ? colors.primary : colors.border,
+                  },
+                ]}
+              >
+                <Text style={styles.categoryEmoji}>{meta?.emoji ?? "🍽️"}</Text>
+                <Text
+                  style={[
+                    styles.categoryPillText,
+                    { color: isSelected ? "#fff" : colors.foreground },
+                  ]}
+                >
+                  {cat.strCategory}
+                </Text>
+              </Pressable>
+            );
+          })}
         </ScrollView>
       </View>
 
-      {/* Recently Viewed */}
-      {recentRecipes.length > 0 && (
-        <View style={styles.section}>
-          <View style={styles.sectionHeader}>
-            <Text style={[styles.sectionTitle, { color: colors.foreground }]}>
-              Recently Viewed
-            </Text>
-          </View>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.featuredScroll}
-          >
-            {recentRecipes.map((recipe) => (
-              <RecipeCard key={recipe.id} recipe={recipe} variant="featured" />
-            ))}
-          </ScrollView>
-        </View>
-      )}
-
-      {/* Popular Recipes */}
+      {/* Recipes for selected category */}
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
           <Text style={[styles.sectionTitle, { color: colors.foreground }]}>
-            {selectedCategory === "all"
-              ? "Popular Recipes"
-              : CATEGORIES.find((c) => c.id === selectedCategory)?.name ?? "Recipes"}
+            {selectedCategory}
           </Text>
-          <Text style={[styles.recipeCount, { color: colors.mutedForeground }]}>
-            {filteredRecipes.length} recipes
-          </Text>
+          <Pressable onPress={() => router.push("/(tabs)/search")}>
+            <Text style={[styles.seeAll, { color: colors.primary }]}>See all</Text>
+          </Pressable>
         </View>
-        {filteredRecipes.length === 0 ? (
-          <View style={styles.emptyState}>
-            <Ionicons name="restaurant-outline" size={48} color={colors.mutedForeground} />
-            <Text style={[styles.emptyText, { color: colors.mutedForeground }]}>
-              No recipes in this category
-            </Text>
+        {mealsLoading ? (
+          <View style={styles.loadingBox}>
+            <ActivityIndicator color={colors.primary} />
           </View>
         ) : (
           <View style={styles.compactGrid}>
-            {filteredRecipes.map((recipe) => (
+            {categoryMeals.slice(0, 10).map((recipe) => (
               <RecipeCard key={recipe.id} recipe={recipe} variant="compact" />
             ))}
           </View>
@@ -224,16 +190,27 @@ const styles = StyleSheet.create({
   greeting: { fontSize: 14, fontFamily: "Figtree_500Medium", marginBottom: 4 },
   tagline: { fontSize: 26, fontFamily: "Figtree_700Bold", lineHeight: 32 },
   searchIconBtn: { width: 46, height: 46, borderRadius: 23, alignItems: "center", justifyContent: "center", marginTop: 4 },
-  section: { marginTop: 24 },
+  emojiRow: { flexDirection: "row", justifyContent: "center", gap: 24, paddingVertical: 16 },
+  emojiBtn: { width: 64, height: 64, borderRadius: 32, alignItems: "center", justifyContent: "center" },
+  emojiText: { fontSize: 36 },
+  section: { marginTop: 16 },
   sectionHeader: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingHorizontal: 20, marginBottom: 14 },
   sectionTitle: { fontSize: 18, fontFamily: "Figtree_700Bold" },
   seeAll: { fontSize: 13, fontFamily: "Figtree_600SemiBold" },
-  recipeCount: { fontSize: 13, fontFamily: "Figtree_400Regular" },
   dayBadge: { paddingHorizontal: 10, paddingVertical: 4, borderRadius: 20 },
   dayBadgeText: { fontSize: 11, fontFamily: "Figtree_600SemiBold" },
-  featuredScroll: { paddingLeft: 16, paddingRight: 20, gap: 12 },
-  categoryScroll: { paddingHorizontal: 20 },
+  categoryScroll: { paddingHorizontal: 16, gap: 8 },
+  categoryPill: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    borderRadius: 24,
+    borderWidth: 1,
+  },
+  categoryEmoji: { fontSize: 16 },
+  categoryPillText: { fontSize: 13, fontFamily: "Figtree_600SemiBold" },
   compactGrid: { flexDirection: "row", flexWrap: "wrap", paddingHorizontal: 16, gap: 12 },
-  emptyState: { alignItems: "center", justifyContent: "center", paddingVertical: 48, gap: 12 },
-  emptyText: { fontSize: 15, fontFamily: "Figtree_400Regular", textAlign: "center" },
+  loadingBox: { height: 180, alignItems: "center", justifyContent: "center" },
 });

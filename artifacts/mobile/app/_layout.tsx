@@ -5,6 +5,8 @@ import {
   Figtree_700Bold,
   useFonts,
 } from "@expo-google-fonts/figtree";
+import Feather from "@expo/vector-icons/Feather";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Redirect, Stack, useSegments } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -15,13 +17,13 @@ import { KeyboardProvider } from "react-native-keyboard-controller";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { ErrorBoundary } from "@/components/ErrorBoundary";
-import { ThemeProvider } from "@/context/ThemeContext";
 import { AuthProvider, useAuth } from "@/context/AuthContext";
 import { FavoritesProvider } from "@/context/FavoritesContext";
-import { RecipeMakerProvider } from "@/context/RecipeMakerContext";
-import { ShoppingListProvider } from "@/context/ShoppingListContext";
 import { MealPlannerProvider } from "@/context/MealPlannerContext";
+import { RecipeMakerProvider } from "@/context/RecipeMakerContext";
 import { RecentlyViewedProvider } from "@/context/RecentlyViewedContext";
+import { ShoppingListProvider } from "@/context/ShoppingListContext";
+import { ThemeProvider } from "@/context/ThemeContext";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -38,60 +40,26 @@ function SplashAnimation({ onDone }: { onDone: () => void }) {
   useEffect(() => {
     Animated.sequence([
       Animated.parallel([
-        Animated.spring(logoScale, {
-          toValue: 1,
-          tension: 60,
-          friction: 7,
-          useNativeDriver: USE_NATIVE_DRIVER,
-        }),
-        Animated.timing(logoOpacity, {
-          toValue: 1,
-          duration: 400,
-          useNativeDriver: USE_NATIVE_DRIVER,
-        }),
+        Animated.spring(logoScale, { toValue: 1, tension: 60, friction: 7, useNativeDriver: USE_NATIVE_DRIVER }),
+        Animated.timing(logoOpacity, { toValue: 1, duration: 400, useNativeDriver: USE_NATIVE_DRIVER }),
       ]),
       Animated.parallel([
-        Animated.timing(titleOpacity, {
-          toValue: 1,
-          duration: 350,
-          useNativeDriver: USE_NATIVE_DRIVER,
-        }),
-        Animated.timing(titleY, {
-          toValue: 0,
-          duration: 350,
-          useNativeDriver: USE_NATIVE_DRIVER,
-        }),
+        Animated.timing(titleOpacity, { toValue: 1, duration: 350, useNativeDriver: USE_NATIVE_DRIVER }),
+        Animated.timing(titleY, { toValue: 0, duration: 350, useNativeDriver: USE_NATIVE_DRIVER }),
       ]),
       Animated.delay(700),
-      Animated.timing(fadeOut, {
-        toValue: 0,
-        duration: 400,
-        useNativeDriver: USE_NATIVE_DRIVER,
-      }),
+      Animated.timing(fadeOut, { toValue: 0, duration: 400, useNativeDriver: USE_NATIVE_DRIVER }),
     ]).start(() => onDone());
   }, []);
 
   return (
     <Animated.View style={[styles.splash, { opacity: fadeOut }]}>
-      <Animated.View
-        style={{
-          transform: [{ scale: logoScale }],
-          opacity: logoOpacity,
-          alignItems: "center",
-        }}
-      >
+      <Animated.View style={{ transform: [{ scale: logoScale }], opacity: logoOpacity, alignItems: "center" }}>
         <View style={styles.splashLogoCircle}>
           <Text style={styles.splashEmoji}>🍽️</Text>
         </View>
       </Animated.View>
-      <Animated.View
-        style={{
-          opacity: titleOpacity,
-          transform: [{ translateY: titleY }],
-          alignItems: "center",
-          marginTop: 24,
-        }}
-      >
+      <Animated.View style={{ opacity: titleOpacity, transform: [{ translateY: titleY }], alignItems: "center", marginTop: 24 }}>
         <Text style={styles.splashTitle}>Recipe Finder</Text>
         <Text style={styles.splashSub}>Discover. Cook. Enjoy.</Text>
       </Animated.View>
@@ -111,7 +79,6 @@ function AuthGatedStack() {
   if (!user && !inAuth && !inOnboarding) {
     return <Redirect href={hasSeenOnboarding ? "/(auth)/login" : "/onboarding"} />;
   }
-
   if (user && (inAuth || inOnboarding)) {
     return <Redirect href="/(tabs)" />;
   }
@@ -135,6 +102,8 @@ function AuthGatedStack() {
 
 export default function RootLayout() {
   const [fontsLoaded, fontError] = useFonts({
+    ...Ionicons.font,
+    ...Feather.font,
     Figtree_400Regular,
     Figtree_500Medium,
     Figtree_600SemiBold,
@@ -198,9 +167,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  splashEmoji: {
-    fontSize: 52,
-  },
+  splashEmoji: { fontSize: 52 },
   splashTitle: {
     fontSize: 30,
     fontFamily: "Figtree_700Bold",
