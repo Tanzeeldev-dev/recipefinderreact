@@ -17,7 +17,8 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useAuth } from "@/context/AuthContext";
 import { useColors } from "@/hooks/useColors";
 
-const IMG_SIZE = Dimensions.get("window").width * 0.65;
+const SCREEN_H = Dimensions.get("window").height;
+const IMG_SIZE = Math.min(Dimensions.get("window").width * 0.52, SCREEN_H * 0.26);
 const webInput = Platform.OS === "web" ? ({ outlineWidth: 0 } as any) : {};
 
 export default function LoginScreen() {
@@ -57,8 +58,8 @@ export default function LoginScreen() {
         contentContainerStyle={[
           styles.content,
           {
-            paddingTop: insets.top + (Platform.OS === "web" ? 67 : 40),
-            paddingBottom: insets.bottom + 32,
+            paddingTop: insets.top + (Platform.OS === "web" ? 67 : 20),
+            paddingBottom: insets.bottom + 24,
           },
         ]}
         keyboardShouldPersistTaps="handled"
@@ -172,7 +173,7 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1 },
   content: { paddingHorizontal: 24 },
-  header: { alignItems: "center", marginBottom: 36 },
+  header: { alignItems: "center", marginBottom: 20 },
   title: { fontSize: 26, fontFamily: "Figtree_700Bold", marginBottom: 6 },
   subtitle: { fontSize: 15, fontFamily: "Figtree_400Regular" },
   form: { gap: 16 },

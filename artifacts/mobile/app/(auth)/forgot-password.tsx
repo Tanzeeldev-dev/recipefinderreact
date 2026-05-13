@@ -14,7 +14,8 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useColors } from "@/hooks/useColors";
 
-const IMG_SIZE = Dimensions.get("window").width * 0.65;
+const SCREEN_H = Dimensions.get("window").height;
+const IMG_SIZE = Math.min(Dimensions.get("window").width * 0.52, SCREEN_H * 0.26);
 const webInput = Platform.OS === "web" ? ({ outlineWidth: 0 } as any) : {};
 
 export default function ForgotPasswordScreen() {
