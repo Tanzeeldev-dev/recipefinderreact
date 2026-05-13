@@ -128,11 +128,11 @@ const styles = StyleSheet.create({
   },
   categoryTitle: {
     fontSize: 24,
-    fontFamily: "Inter_700Bold",
+    fontFamily: "Figtree_700Bold",
   },
   recipeCount: {
     fontSize: 14,
-    fontFamily: "Inter_400Regular",
+    fontFamily: "Figtree_400Regular",
   },
   listContent: {
     paddingHorizontal: 20,
@@ -145,6 +145,6 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 15,
-    fontFamily: "Inter_400Regular",
+    fontFamily: "Figtree_400Regular",
   },
 });

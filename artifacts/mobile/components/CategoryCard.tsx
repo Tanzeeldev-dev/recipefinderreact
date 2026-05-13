@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
   },
   pillText: {
     fontSize: 13,
-    fontFamily: "Inter_600SemiBold",
+    fontFamily: "Figtree_600SemiBold",
   },
   gridCard: {
     borderRadius: 20,
@@ -114,12 +114,12 @@ const styles = StyleSheet.create({
   },
   gridName: {
     fontSize: 13,
-    fontFamily: "Inter_700Bold",
+    fontFamily: "Figtree_700Bold",
     textAlign: "center",
   },
   gridCount: {
     fontSize: 11,
-    fontFamily: "Inter_400Regular",
+    fontFamily: "Figtree_400Regular",
     textAlign: "center",
   },
 });

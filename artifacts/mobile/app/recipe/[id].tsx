@@ -123,7 +123,7 @@ export default function RecipeDetailScreen() {
                 <Ionicons name="share-outline" size={20} color="#fff" />
               </Pressable>
               <Pressable onPress={() => toggleFavorite(recipe.id)} style={styles.heroBtn} hitSlop={8}>
-                <Ionicons name={favorited ? "heart" : "heart-outline"} size={22} color={favorited ? "#FF6B35" : "#fff"} />
+                <Ionicons name={favorited ? "heart" : "heart-outline"} size={22} color={favorited ? "#7C3AED" : "#fff"} />
               </Pressable>
             </View>
           </View>
@@ -131,7 +131,7 @@ export default function RecipeDetailScreen() {
             <View style={[styles.badge, { backgroundColor: colors.primary }]}>
               <Text style={styles.badgeText}>{recipe.category}</Text>
             </View>
-            <View style={[styles.badge, { backgroundColor: recipe.difficulty === "Easy" ? "#4CAF50" : recipe.difficulty === "Medium" ? "#FF9800" : "#F44336" }]}>
+            <View style={[styles.badge, { backgroundColor: recipe.difficulty === "Easy" ? "#5B21B6" : recipe.difficulty === "Medium" ? "#FF9800" : "#F44336" }]}>
               <Text style={styles.badgeText}>{recipe.difficulty}</Text>
             </View>
           </View>
@@ -189,8 +189,8 @@ export default function RecipeDetailScreen() {
               style={({ pressed }) => [
                 styles.actionBtn,
                 {
-                  backgroundColor: shoppingAdded ? "#4CAF50" : colors.secondary,
-                  borderColor: shoppingAdded ? "#4CAF50" : colors.border,
+                  backgroundColor: shoppingAdded ? "#5B21B6" : colors.secondary,
+                  borderColor: shoppingAdded ? "#5B21B6" : colors.border,
                   opacity: pressed ? 0.85 : 1,
                 },
               ]}
@@ -248,7 +248,7 @@ export default function RecipeDetailScreen() {
                 const done = doneSteps.has(index);
                 return (
                   <Pressable key={index} onPress={() => toggleStep(index)} style={styles.stepItem}>
-                    <View style={[styles.stepNumber, { backgroundColor: done ? "#4CAF50" : colors.primary }]}>
+                    <View style={[styles.stepNumber, { backgroundColor: done ? "#5B21B6" : colors.primary }]}>
                       {done ? (
                         <Ionicons name="checkmark" size={14} color="#fff" />
                       ) : (
@@ -294,40 +294,40 @@ const styles = StyleSheet.create({
   heroBtn: { width: 40, height: 40, borderRadius: 20, backgroundColor: "rgba(0,0,0,0.35)", alignItems: "center", justifyContent: "center" },
   heroBadges: { position: "absolute", bottom: 16, left: 16, flexDirection: "row", gap: 8 },
   badge: { paddingHorizontal: 12, paddingVertical: 5, borderRadius: 20 },
-  badgeText: { color: "#fff", fontSize: 12, fontFamily: "Inter_600SemiBold" },
+  badgeText: { color: "#fff", fontSize: 12, fontFamily: "Figtree_600SemiBold" },
   content: { borderTopLeftRadius: 28, borderTopRightRadius: 28, marginTop: -24, padding: 24, gap: 16 },
-  title: { fontSize: 24, fontFamily: "Inter_700Bold", lineHeight: 32 },
+  title: { fontSize: 24, fontFamily: "Figtree_700Bold", lineHeight: 32 },
   ratingRow: { flexDirection: "row", alignItems: "center", gap: 6 },
-  ratingText: { fontSize: 15, fontFamily: "Inter_700Bold" },
-  ratingLabel: { fontSize: 13, fontFamily: "Inter_400Regular" },
+  ratingText: { fontSize: 15, fontFamily: "Figtree_700Bold" },
+  ratingLabel: { fontSize: 13, fontFamily: "Figtree_400Regular" },
   infoChips: { flexDirection: "row", gap: 12 },
   chip: { flex: 1, alignItems: "center", paddingVertical: 12, borderRadius: 14, gap: 4 },
-  chipValue: { fontSize: 14, fontFamily: "Inter_700Bold" },
-  chipLabel: { fontSize: 11, fontFamily: "Inter_400Regular" },
+  chipValue: { fontSize: 14, fontFamily: "Figtree_700Bold" },
+  chipLabel: { fontSize: 11, fontFamily: "Figtree_400Regular" },
   servingRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 16, paddingVertical: 10, borderRadius: 14, borderWidth: 1 },
-  servingLabel: { fontSize: 13, fontFamily: "Inter_500Medium" },
+  servingLabel: { fontSize: 13, fontFamily: "Figtree_500Medium" },
   servingControls: { flexDirection: "row", alignItems: "center", gap: 16 },
   servingBtn: { width: 30, height: 30, borderRadius: 15, alignItems: "center", justifyContent: "center", borderWidth: 1 },
-  servingValue: { fontSize: 18, fontFamily: "Inter_700Bold", minWidth: 24, textAlign: "center" },
-  description: { fontSize: 14, fontFamily: "Inter_400Regular", lineHeight: 22 },
+  servingValue: { fontSize: 18, fontFamily: "Figtree_700Bold", minWidth: 24, textAlign: "center" },
+  description: { fontSize: 14, fontFamily: "Figtree_400Regular", lineHeight: 22 },
   actionBtns: { flexDirection: "row", gap: 10 },
   actionBtn: { flex: 1, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6, paddingVertical: 12, borderRadius: 12, borderWidth: 1 },
-  actionBtnText: { fontSize: 13, fontFamily: "Inter_600SemiBold" },
+  actionBtnText: { fontSize: 13, fontFamily: "Figtree_600SemiBold" },
   tabBar: { flexDirection: "row", borderBottomWidth: 1, borderBottomColor: "#E8E0D8" },
   tab: { flex: 1, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8, paddingBottom: 12 },
-  tabText: { fontSize: 15, fontFamily: "Inter_600SemiBold" },
-  tabCount: { fontSize: 11, fontFamily: "Inter_700Bold", paddingHorizontal: 7, paddingVertical: 2, borderRadius: 10 },
+  tabText: { fontSize: 15, fontFamily: "Figtree_600SemiBold" },
+  tabCount: { fontSize: 11, fontFamily: "Figtree_700Bold", paddingHorizontal: 7, paddingVertical: 2, borderRadius: 10 },
   list: { gap: 0 },
   ingredientItem: { flexDirection: "row", alignItems: "center", gap: 12, paddingVertical: 12, borderBottomWidth: StyleSheet.hairlineWidth },
   ingredientDot: { width: 8, height: 8, borderRadius: 4 },
-  ingredientText: { flex: 1, fontSize: 14, fontFamily: "Inter_400Regular", lineHeight: 20 },
+  ingredientText: { flex: 1, fontSize: 14, fontFamily: "Figtree_400Regular", lineHeight: 20 },
   stepItem: { flexDirection: "row", gap: 14, marginBottom: 16 },
   stepNumber: { width: 32, height: 32, borderRadius: 16, alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 2 },
-  stepNumberText: { color: "#fff", fontSize: 13, fontFamily: "Inter_700Bold" },
-  stepText: { flex: 1, fontSize: 14, fontFamily: "Inter_400Regular", lineHeight: 22 },
-  progressText: { fontSize: 13, fontFamily: "Inter_500Medium", textAlign: "center", paddingTop: 8 },
+  stepNumberText: { color: "#fff", fontSize: 13, fontFamily: "Figtree_700Bold" },
+  stepText: { flex: 1, fontSize: 14, fontFamily: "Figtree_400Regular", lineHeight: 22 },
+  progressText: { fontSize: 13, fontFamily: "Figtree_500Medium", textAlign: "center", paddingTop: 8 },
   notFound: { flex: 1, alignItems: "center", justifyContent: "center", gap: 16 },
-  notFoundText: { fontSize: 18, fontFamily: "Inter_700Bold" },
+  notFoundText: { fontSize: 18, fontFamily: "Figtree_700Bold" },
   backLinkBtn: { paddingHorizontal: 24, paddingVertical: 12, borderRadius: 12 },
-  backLinkText: { color: "#fff", fontSize: 15, fontFamily: "Inter_600SemiBold" },
+  backLinkText: { color: "#fff", fontSize: 15, fontFamily: "Figtree_600SemiBold" },
 });

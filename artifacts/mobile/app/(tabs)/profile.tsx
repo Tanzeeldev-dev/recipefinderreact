@@ -30,9 +30,9 @@ export default function ProfileScreen() {
     : "?";
 
   const stats = [
-    { label: "Favorites", value: favoriteIds.length, icon: "heart" as const, color: "#FF6B35" },
-    { label: "My Recipes", value: userRecipes.length, icon: "book" as const, color: "#4CAF50" },
-    { label: "Shopping", value: items.filter((i) => !i.checked).length, icon: "cart" as const, color: "#5C6BC0" },
+    { label: "Favorites", value: favoriteIds.length, icon: "heart" as const, color: "#7C3AED" },
+    { label: "My Recipes", value: userRecipes.length, icon: "book" as const, color: "#5B21B6" },
+    { label: "Shopping", value: items.filter((i) => !i.checked).length, icon: "cart" as const, color: "#7C3AED" },
   ];
 
   const menuItems = [
@@ -135,9 +135,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginBottom: 4,
   },
-  initials: { color: "#fff", fontSize: 28, fontFamily: "Inter_700Bold" },
-  name: { fontSize: 22, fontFamily: "Inter_700Bold" },
-  email: { fontSize: 14, fontFamily: "Inter_400Regular" },
+  initials: { color: "#fff", fontSize: 28, fontFamily: "Figtree_700Bold" },
+  name: { fontSize: 22, fontFamily: "Figtree_700Bold" },
+  email: { fontSize: 14, fontFamily: "Figtree_400Regular" },
   statsRow: { flexDirection: "row", gap: 12 },
   statCard: {
     flex: 1,
@@ -147,8 +147,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     gap: 4,
   },
-  statValue: { fontSize: 22, fontFamily: "Inter_700Bold" },
-  statLabel: { fontSize: 11, fontFamily: "Inter_400Regular", textAlign: "center" },
+  statValue: { fontSize: 22, fontFamily: "Figtree_700Bold" },
+  statLabel: { fontSize: 11, fontFamily: "Figtree_400Regular", textAlign: "center" },
   menuSection: { borderRadius: 16, borderWidth: 1, overflow: "hidden" },
   menuItem: {
     flexDirection: "row",
@@ -157,10 +157,10 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   menuIconWrap: { width: 36, height: 36, borderRadius: 10, alignItems: "center", justifyContent: "center" },
-  menuLabel: { flex: 1, fontSize: 15, fontFamily: "Inter_500Medium" },
+  menuLabel: { flex: 1, fontSize: 15, fontFamily: "Figtree_500Medium" },
   menuRight: { flexDirection: "row", alignItems: "center", gap: 8 },
   badge: { paddingHorizontal: 7, paddingVertical: 2, borderRadius: 10, minWidth: 20, alignItems: "center" },
-  badgeText: { color: "#fff", fontSize: 11, fontFamily: "Inter_700Bold" },
+  badgeText: { color: "#fff", fontSize: 11, fontFamily: "Figtree_700Bold" },
   logoutBtn: {
     flexDirection: "row",
     alignItems: "center",
@@ -169,5 +169,5 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 16,
   },
-  logoutText: { color: "#F44336", fontSize: 15, fontFamily: "Inter_700Bold" },
+  logoutText: { color: "#F44336", fontSize: 15, fontFamily: "Figtree_700Bold" },
 });

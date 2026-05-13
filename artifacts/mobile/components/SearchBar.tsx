@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: 15,
-    fontFamily: "Inter_400Regular",
+    fontFamily: "Figtree_400Regular",
     padding: 0,
     margin: 0,
   },

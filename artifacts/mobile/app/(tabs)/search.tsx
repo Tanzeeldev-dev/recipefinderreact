@@ -133,12 +133,12 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 28,
-    fontFamily: "Inter_700Bold",
+    fontFamily: "Figtree_700Bold",
     marginBottom: 2,
   },
   subtitle: {
     fontSize: 14,
-    fontFamily: "Inter_400Regular",
+    fontFamily: "Figtree_400Regular",
     marginBottom: 16,
   },
   searchBarWrap: {
@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
   },
   resultsText: {
     fontSize: 13,
-    fontFamily: "Inter_500Medium",
+    fontFamily: "Figtree_500Medium",
     marginBottom: 12,
   },
   emptyState: {
@@ -168,12 +168,12 @@ const styles = StyleSheet.create({
   },
   emptyTitle: {
     fontSize: 18,
-    fontFamily: "Inter_700Bold",
+    fontFamily: "Figtree_700Bold",
     textAlign: "center",
   },
   emptySubtitle: {
     fontSize: 14,
-    fontFamily: "Inter_400Regular",
+    fontFamily: "Figtree_400Regular",
     textAlign: "center",
     lineHeight: 20,
   },

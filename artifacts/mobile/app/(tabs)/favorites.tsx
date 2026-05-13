@@ -90,12 +90,12 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 28,
-    fontFamily: "Inter_700Bold",
+    fontFamily: "Figtree_700Bold",
     marginBottom: 4,
   },
   subtitle: {
     fontSize: 14,
-    fontFamily: "Inter_400Regular",
+    fontFamily: "Figtree_400Regular",
   },
   listContent: {
     paddingHorizontal: 20,
@@ -116,12 +116,12 @@ const styles = StyleSheet.create({
   },
   emptyTitle: {
     fontSize: 20,
-    fontFamily: "Inter_700Bold",
+    fontFamily: "Figtree_700Bold",
     textAlign: "center",
   },
   emptySubtitle: {
     fontSize: 14,
-    fontFamily: "Inter_400Regular",
+    fontFamily: "Figtree_400Regular",
     textAlign: "center",
     lineHeight: 20,
   },

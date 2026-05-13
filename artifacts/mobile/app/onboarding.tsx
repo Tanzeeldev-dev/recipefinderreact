@@ -21,19 +21,19 @@ const SLIDES = [
     icon: "restaurant" as const,
     title: "Discover Amazing Recipes",
     subtitle: "Explore hundreds of handpicked recipes from around the world, from quick breakfasts to gourmet dinners.",
-    color: "#FF6B35",
+    color: "#7C3AED",
   },
   {
     icon: "create" as const,
     title: "Create Your Own Recipes",
     subtitle: "Build and save your own recipes, adjust ingredients, and share your culinary creations.",
-    color: "#4CAF50",
+    color: "#5B21B6",
   },
   {
     icon: "calendar" as const,
     title: "Plan Your Meals",
     subtitle: "Organize your weekly meals, build shopping lists, and set cooking timers — all in one place.",
-    color: "#5C6BC0",
+    color: "#7C3AED",
   },
 ];
 
@@ -159,14 +159,14 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 26,
-    fontFamily: "Inter_700Bold",
+    fontFamily: "Figtree_700Bold",
     textAlign: "center",
     marginBottom: 16,
     lineHeight: 34,
   },
   subtitle: {
     fontSize: 15,
-    fontFamily: "Inter_400Regular",
+    fontFamily: "Figtree_400Regular",
     textAlign: "center",
     lineHeight: 24,
   },
@@ -197,10 +197,10 @@ const styles = StyleSheet.create({
   nextBtnText: {
     color: "#fff",
     fontSize: 16,
-    fontFamily: "Inter_700Bold",
+    fontFamily: "Figtree_700Bold",
   },
   skipText: {
     fontSize: 14,
-    fontFamily: "Inter_500Medium",
+    fontFamily: "Figtree_500Medium",
   },
 });

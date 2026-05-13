@@ -132,7 +132,7 @@ export default function CreateRecipeScreen() {
       )}
       {success && (
         <View style={[styles.successBox, { backgroundColor: "#E8F5E9" }]}>
-          <Ionicons name="checkmark-circle" size={16} color="#4CAF50" />
+          <Ionicons name="checkmark-circle" size={16} color="#5B21B6" />
           <Text style={styles.successText}>Recipe saved! Redirecting...</Text>
         </View>
       )}
@@ -329,35 +329,35 @@ function Field({ label, children, colors }: { label: string; children: React.Rea
 const styles = StyleSheet.create({
   container: { flex: 1 },
   content: { paddingHorizontal: 20, gap: 10 },
-  title: { fontSize: 26, fontFamily: "Inter_700Bold" },
-  subtitle: { fontSize: 14, fontFamily: "Inter_400Regular", marginBottom: 8 },
+  title: { fontSize: 26, fontFamily: "Figtree_700Bold" },
+  subtitle: { fontSize: 14, fontFamily: "Figtree_400Regular", marginBottom: 8 },
   errorBox: { flexDirection: "row", alignItems: "center", gap: 8, padding: 12, borderRadius: 12 },
-  errorText: { color: "#F44336", fontSize: 13, fontFamily: "Inter_500Medium", flex: 1 },
+  errorText: { color: "#F44336", fontSize: 13, fontFamily: "Figtree_500Medium", flex: 1 },
   successBox: { flexDirection: "row", alignItems: "center", gap: 8, padding: 12, borderRadius: 12 },
-  successText: { color: "#4CAF50", fontSize: 13, fontFamily: "Inter_500Medium", flex: 1 },
-  sectionLabel: { fontSize: 11, fontFamily: "Inter_600SemiBold", letterSpacing: 0.8, marginTop: 8 },
+  successText: { color: "#5B21B6", fontSize: 13, fontFamily: "Figtree_500Medium", flex: 1 },
+  sectionLabel: { fontSize: 11, fontFamily: "Figtree_600SemiBold", letterSpacing: 0.8, marginTop: 8 },
   fieldWrap: { gap: 6 },
-  fieldLabel: { fontSize: 14, fontFamily: "Inter_600SemiBold" },
-  input: { paddingHorizontal: 14, paddingVertical: 12, borderRadius: 12, borderWidth: 1, fontSize: 15, fontFamily: "Inter_400Regular" },
+  fieldLabel: { fontSize: 14, fontFamily: "Figtree_600SemiBold" },
+  input: { paddingHorizontal: 14, paddingVertical: 12, borderRadius: 12, borderWidth: 1, fontSize: 15, fontFamily: "Figtree_400Regular" },
   textArea: { height: 80, textAlignVertical: "top" },
   chipScroll: { flexGrow: 0, marginBottom: 4 },
   chip: { paddingHorizontal: 14, paddingVertical: 8, borderRadius: 20, borderWidth: 1, marginRight: 8 },
-  chipText: { fontSize: 13, fontFamily: "Inter_600SemiBold" },
+  chipText: { fontSize: 13, fontFamily: "Figtree_600SemiBold" },
   row: { flexDirection: "row", gap: 8 },
   diffChip: { paddingVertical: 10, borderRadius: 12, borderWidth: 1, alignItems: "center" },
   miniField: { flex: 1, gap: 4 },
-  miniLabel: { fontSize: 11, fontFamily: "Inter_500Medium" },
-  miniInput: { paddingHorizontal: 10, paddingVertical: 10, borderRadius: 10, borderWidth: 1, fontSize: 14, fontFamily: "Inter_400Regular", textAlign: "center" },
+  miniLabel: { fontSize: 11, fontFamily: "Figtree_500Medium" },
+  miniInput: { paddingHorizontal: 10, paddingVertical: 10, borderRadius: 10, borderWidth: 1, fontSize: 14, fontFamily: "Figtree_400Regular", textAlign: "center" },
   listItemRow: { flexDirection: "row", alignItems: "center", gap: 8 },
   listItemWrap: { flex: 1, flexDirection: "row", alignItems: "center", gap: 10, paddingHorizontal: 12, paddingVertical: 10, borderRadius: 12, borderWidth: 1 },
   listDot: { width: 8, height: 8, borderRadius: 4, flexShrink: 0 },
-  listInput: { flex: 1, fontSize: 14, fontFamily: "Inter_400Regular", padding: 0 },
+  listInput: { flex: 1, fontSize: 14, fontFamily: "Figtree_400Regular", padding: 0 },
   stepRow: { flexDirection: "row", alignItems: "flex-start", gap: 8 },
   stepNum: { width: 28, height: 28, borderRadius: 14, alignItems: "center", justifyContent: "center", marginTop: 6, flexShrink: 0 },
-  stepNumText: { color: "#fff", fontSize: 12, fontFamily: "Inter_700Bold" },
+  stepNumText: { color: "#fff", fontSize: 12, fontFamily: "Figtree_700Bold" },
   stepInputWrap: { flex: 1, paddingHorizontal: 12, paddingVertical: 10, borderRadius: 12, borderWidth: 1 },
   addBtn: { flexDirection: "row", alignItems: "center", gap: 6, paddingVertical: 10, borderRadius: 12, borderWidth: 1.5, borderStyle: "dashed", justifyContent: "center" },
-  addBtnText: { fontSize: 14, fontFamily: "Inter_600SemiBold" },
+  addBtnText: { fontSize: 14, fontFamily: "Figtree_600SemiBold" },
   saveBtn: { flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 10, paddingVertical: 16, borderRadius: 16, marginTop: 12 },
-  saveBtnText: { color: "#fff", fontSize: 16, fontFamily: "Inter_700Bold" },
+  saveBtnText: { color: "#fff", fontSize: 16, fontFamily: "Figtree_700Bold" },
 });

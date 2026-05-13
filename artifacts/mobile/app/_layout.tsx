@@ -1,14 +1,15 @@
 import {
-  Inter_400Regular,
-  Inter_500Medium,
-  Inter_600SemiBold,
-  Inter_700Bold,
+  Figtree_400Regular,
+  Figtree_500Medium,
+  Figtree_600SemiBold,
+  Figtree_700Bold,
   useFonts,
-} from "@expo-google-fonts/inter";
+} from "@expo-google-fonts/figtree";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Redirect, Stack, useSegments } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { Animated, Platform, StyleSheet, Text, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -25,24 +26,92 @@ import { RecentlyViewedProvider } from "@/context/RecentlyViewedContext";
 SplashScreen.preventAutoHideAsync();
 
 const queryClient = new QueryClient();
+const USE_NATIVE_DRIVER = Platform.OS !== "web";
+
+function SplashAnimation({ onDone }: { onDone: () => void }) {
+  const logoScale = useRef(new Animated.Value(0.3)).current;
+  const logoOpacity = useRef(new Animated.Value(0)).current;
+  const titleOpacity = useRef(new Animated.Value(0)).current;
+  const titleY = useRef(new Animated.Value(20)).current;
+  const fadeOut = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    Animated.sequence([
+      Animated.parallel([
+        Animated.spring(logoScale, {
+          toValue: 1,
+          tension: 60,
+          friction: 7,
+          useNativeDriver: USE_NATIVE_DRIVER,
+        }),
+        Animated.timing(logoOpacity, {
+          toValue: 1,
+          duration: 400,
+          useNativeDriver: USE_NATIVE_DRIVER,
+        }),
+      ]),
+      Animated.parallel([
+        Animated.timing(titleOpacity, {
+          toValue: 1,
+          duration: 350,
+          useNativeDriver: USE_NATIVE_DRIVER,
+        }),
+        Animated.timing(titleY, {
+          toValue: 0,
+          duration: 350,
+          useNativeDriver: USE_NATIVE_DRIVER,
+        }),
+      ]),
+      Animated.delay(700),
+      Animated.timing(fadeOut, {
+        toValue: 0,
+        duration: 400,
+        useNativeDriver: USE_NATIVE_DRIVER,
+      }),
+    ]).start(() => onDone());
+  }, []);
+
+  return (
+    <Animated.View style={[styles.splash, { opacity: fadeOut }]}>
+      <Animated.View
+        style={{
+          transform: [{ scale: logoScale }],
+          opacity: logoOpacity,
+          alignItems: "center",
+        }}
+      >
+        <View style={styles.splashLogoCircle}>
+          <Text style={styles.splashEmoji}>🍽️</Text>
+        </View>
+      </Animated.View>
+      <Animated.View
+        style={{
+          opacity: titleOpacity,
+          transform: [{ translateY: titleY }],
+          alignItems: "center",
+          marginTop: 24,
+        }}
+      >
+        <Text style={styles.splashTitle}>Recipe Finder</Text>
+        <Text style={styles.splashSub}>Discover. Cook. Enjoy.</Text>
+      </Animated.View>
+    </Animated.View>
+  );
+}
 
 function AuthGatedStack() {
   const { user, isLoading, hasSeenOnboarding } = useAuth();
   const segments = useSegments();
 
-  // While auth is loading, show nothing (splash is still up)
   if (isLoading) return null;
 
   const inAuth = segments[0] === "(auth)";
   const inOnboarding = segments[0] === "onboarding";
-  const inTabs = segments[0] === "(tabs)";
 
-  // Redirect unauthenticated users
   if (!user && !inAuth && !inOnboarding) {
     return <Redirect href={hasSeenOnboarding ? "/(auth)/login" : "/onboarding"} />;
   }
 
-  // Redirect authenticated users away from auth screens
   if (user && (inAuth || inOnboarding)) {
     return <Redirect href="/(tabs)" />;
   }
@@ -66,11 +135,12 @@ function AuthGatedStack() {
 
 export default function RootLayout() {
   const [fontsLoaded, fontError] = useFonts({
-    Inter_400Regular,
-    Inter_500Medium,
-    Inter_600SemiBold,
-    Inter_700Bold,
+    Figtree_400Regular,
+    Figtree_500Medium,
+    Figtree_600SemiBold,
+    Figtree_700Bold,
   });
+  const [showSplash, setShowSplash] = useState(true);
 
   useEffect(() => {
     if (fontsLoaded || fontError) {
@@ -94,6 +164,9 @@ export default function RootLayout() {
                         <RecentlyViewedProvider>
                           <KeyboardProvider>
                             <AuthGatedStack />
+                            {showSplash && (
+                              <SplashAnimation onDone={() => setShowSplash(false)} />
+                            )}
                           </KeyboardProvider>
                         </RecentlyViewedProvider>
                       </MealPlannerProvider>
@@ -108,3 +181,37 @@ export default function RootLayout() {
     </GestureHandlerRootView>
   );
 }
+
+const styles = StyleSheet.create({
+  splash: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "#7C3AED",
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 9999,
+  },
+  splashLogoCircle: {
+    width: 110,
+    height: 110,
+    borderRadius: 55,
+    backgroundColor: "rgba(255,255,255,0.2)",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  splashEmoji: {
+    fontSize: 52,
+  },
+  splashTitle: {
+    fontSize: 30,
+    fontFamily: "Figtree_700Bold",
+    color: "#FFFFFF",
+    letterSpacing: 0.5,
+  },
+  splashSub: {
+    fontSize: 14,
+    fontFamily: "Figtree_400Regular",
+    color: "rgba(255,255,255,0.75)",
+    marginTop: 6,
+    letterSpacing: 1,
+  },
+});

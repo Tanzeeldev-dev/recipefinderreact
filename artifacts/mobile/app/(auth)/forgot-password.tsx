@@ -78,12 +78,12 @@ export default function ForgotPasswordScreen() {
       ) : (
         <View style={styles.content}>
           <View style={[styles.iconWrap, { backgroundColor: "#E8F5E9" }]}>
-            <Ionicons name="checkmark-circle" size={40} color="#4CAF50" />
+            <Ionicons name="checkmark-circle" size={40} color="#5B21B6" />
           </View>
           <Text style={[styles.title, { color: colors.foreground }]}>Check your email</Text>
           <Text style={[styles.subtitle, { color: colors.mutedForeground }]}>
             We've sent a password reset link to{"\n"}
-            <Text style={{ color: colors.primary, fontFamily: "Inter_600SemiBold" }}>{email}</Text>
+            <Text style={{ color: colors.primary, fontFamily: "Figtree_600SemiBold" }}>{email}</Text>
           </Text>
           <Pressable
             onPress={() => router.back()}
@@ -105,8 +105,8 @@ const styles = StyleSheet.create({
   backBtn: { width: 40, height: 40, justifyContent: "center", marginBottom: 32 },
   content: { alignItems: "center", gap: 16 },
   iconWrap: { width: 88, height: 88, borderRadius: 44, alignItems: "center", justifyContent: "center", marginBottom: 8 },
-  title: { fontSize: 24, fontFamily: "Inter_700Bold", textAlign: "center" },
-  subtitle: { fontSize: 15, fontFamily: "Inter_400Regular", textAlign: "center", lineHeight: 22 },
+  title: { fontSize: 24, fontFamily: "Figtree_700Bold", textAlign: "center" },
+  subtitle: { fontSize: 15, fontFamily: "Figtree_400Regular", textAlign: "center", lineHeight: 22 },
   inputWrap: {
     width: "100%",
     flexDirection: "row",
@@ -121,12 +121,12 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: 15,
-    fontFamily: "Inter_400Regular",
+    fontFamily: "Figtree_400Regular",
     padding: 0,
     margin: 0,
     borderWidth: 0,
     backgroundColor: "transparent",
   },
   resetBtn: { width: "100%", paddingVertical: 16, borderRadius: 14, alignItems: "center", marginTop: 8 },
-  resetBtnText: { color: "#fff", fontSize: 16, fontFamily: "Inter_700Bold" },
+  resetBtnText: { color: "#fff", fontSize: 16, fontFamily: "Figtree_700Bold" },
 });

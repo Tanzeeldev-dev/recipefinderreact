@@ -23,10 +23,10 @@ export interface Category {
 }
 
 export const CATEGORIES: Category[] = [
-  { id: "all", name: "All", icon: "grid", color: "#FF6B35", bgColor: "#FFF0EB" },
+  { id: "all", name: "All", icon: "grid", color: "#7C3AED", bgColor: "#FFF0EB" },
   { id: "breakfast", name: "Breakfast", icon: "sunny", color: "#FFB300", bgColor: "#FFF8E1" },
-  { id: "lunch", name: "Lunch", icon: "restaurant", color: "#4CAF50", bgColor: "#E8F5E9" },
-  { id: "dinner", name: "Dinner", icon: "moon", color: "#5C6BC0", bgColor: "#E8EAF6" },
+  { id: "lunch", name: "Lunch", icon: "restaurant", color: "#5B21B6", bgColor: "#E8F5E9" },
+  { id: "dinner", name: "Dinner", icon: "moon", color: "#7C3AED", bgColor: "#E8EAF6" },
   { id: "dessert", name: "Dessert", icon: "ice-cream", color: "#E91E63", bgColor: "#FCE4EC" },
   { id: "drinks", name: "Drinks", icon: "wine", color: "#00BCD4", bgColor: "#E0F7FA" },
   { id: "healthy", name: "Healthy", icon: "leaf", color: "#2D4739", bgColor: "#E8F4EC" },

@@ -108,11 +108,11 @@ export default function TimerScreen() {
             style={[
               styles.timerProgress,
               {
-                borderColor: finished ? "#4CAF50" : running ? colors.primary : colors.border,
+                borderColor: finished ? "#5B21B6" : running ? colors.primary : colors.border,
               },
             ]}
           />
-          <Text style={[styles.timeText, { color: finished ? "#4CAF50" : colors.foreground }]}>
+          <Text style={[styles.timeText, { color: finished ? "#5B21B6" : colors.foreground }]}>
             {finished ? "Done!" : timeDisplay}
           </Text>
           {running && (
@@ -136,7 +136,7 @@ export default function TimerScreen() {
           onPress={running ? handlePause : handleStart}
           style={({ pressed }) => [
             styles.playBtn,
-            { backgroundColor: finished ? "#4CAF50" : colors.primary, opacity: pressed ? 0.85 : 1 },
+            { backgroundColor: finished ? "#5B21B6" : colors.primary, opacity: pressed ? 0.85 : 1 },
           ]}
         >
           <Ionicons
@@ -218,26 +218,26 @@ export default function TimerScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1, paddingHorizontal: 24 },
   backBtn: { width: 40, height: 40, justifyContent: "center", marginBottom: 8 },
-  title: { fontSize: 24, fontFamily: "Inter_700Bold", marginBottom: 32, textAlign: "center" },
+  title: { fontSize: 24, fontFamily: "Figtree_700Bold", marginBottom: 32, textAlign: "center" },
   timerWrap: { alignItems: "center", marginBottom: 32 },
   timerRing: { width: 200, height: 200, borderRadius: 100, borderWidth: 8, alignItems: "center", justifyContent: "center" },
   timerProgress: { position: "absolute", width: 200, height: 200, borderRadius: 100, borderWidth: 8 },
-  timeText: { fontSize: 48, fontFamily: "Inter_700Bold", textAlign: "center" },
-  timerLabel: { fontSize: 12, fontFamily: "Inter_400Regular" },
+  timeText: { fontSize: 48, fontFamily: "Figtree_700Bold", textAlign: "center" },
+  timerLabel: { fontSize: 12, fontFamily: "Figtree_400Regular" },
   controls: { flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 20, marginBottom: 36 },
   controlBtn: { width: 52, height: 52, borderRadius: 26, alignItems: "center", justifyContent: "center" },
   playBtn: { width: 72, height: 72, borderRadius: 36, alignItems: "center", justifyContent: "center" },
-  plusOneText: { fontSize: 14, fontFamily: "Inter_700Bold" },
+  plusOneText: { fontSize: 14, fontFamily: "Figtree_700Bold" },
   presetSection: { gap: 10, marginBottom: 20 },
-  presetLabel: { fontSize: 11, fontFamily: "Inter_600SemiBold", letterSpacing: 0.8 },
+  presetLabel: { fontSize: 11, fontFamily: "Figtree_600SemiBold", letterSpacing: 0.8 },
   presets: { flexDirection: "row", gap: 8, flexWrap: "wrap" },
   presetBtn: { paddingHorizontal: 16, paddingVertical: 10, borderRadius: 12, borderWidth: 1 },
-  presetText: { fontSize: 14, fontFamily: "Inter_600SemiBold" },
+  presetText: { fontSize: 14, fontFamily: "Figtree_600SemiBold" },
   customSection: { gap: 10 },
   customRow: { flexDirection: "row", gap: 10 },
   customInput: { flex: 1, flexDirection: "row", alignItems: "center", paddingHorizontal: 14, paddingVertical: 12, borderRadius: 12, borderWidth: 1, gap: 8 },
-  customText: { flex: 1, fontSize: 18, fontFamily: "Inter_700Bold", padding: 0 },
-  customUnit: { fontSize: 13, fontFamily: "Inter_500Medium" },
+  customText: { flex: 1, fontSize: 18, fontFamily: "Figtree_700Bold", padding: 0 },
+  customUnit: { fontSize: 13, fontFamily: "Figtree_500Medium" },
   setBtn: { paddingHorizontal: 24, paddingVertical: 12, borderRadius: 12, alignItems: "center", justifyContent: "center" },
-  setBtnText: { color: "#fff", fontSize: 15, fontFamily: "Inter_700Bold" },
+  setBtnText: { color: "#fff", fontSize: 15, fontFamily: "Figtree_700Bold" },
 });

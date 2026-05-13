@@ -42,7 +42,7 @@ export default function TabLayout() {
           ),
         tabBarLabelStyle: {
           fontSize: 10,
-          fontFamily: "Inter_600SemiBold",
+          fontFamily: "Figtree_600SemiBold",
         },
       }}
     >

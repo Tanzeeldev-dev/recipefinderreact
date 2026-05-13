@@ -215,7 +215,7 @@ function EmptyState({
 const styles = StyleSheet.create({
   container: { flex: 1 },
   header: { paddingHorizontal: 20, paddingBottom: 0, gap: 12 },
-  title: { fontSize: 28, fontFamily: "Inter_700Bold" },
+  title: { fontSize: 28, fontFamily: "Figtree_700Bold" },
   quickLinks: { gap: 8 },
   quickLink: {
     flexDirection: "row",
@@ -225,24 +225,24 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     borderWidth: 1,
   },
-  quickLinkText: { flex: 1, fontSize: 14, fontFamily: "Inter_600SemiBold" },
+  quickLinkText: { flex: 1, fontSize: 14, fontFamily: "Figtree_600SemiBold" },
   badge: { paddingHorizontal: 7, paddingVertical: 2, borderRadius: 10, minWidth: 20, alignItems: "center" },
-  badgeText: { color: "#fff", fontSize: 11, fontFamily: "Inter_700Bold" },
+  badgeText: { color: "#fff", fontSize: 11, fontFamily: "Figtree_700Bold" },
   tabs: { flexDirection: "row", borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: "#E8E0D8" },
   tab: { flex: 1, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8, paddingBottom: 12, paddingTop: 4 },
-  tabText: { fontSize: 15, fontFamily: "Inter_600SemiBold" },
+  tabText: { fontSize: 15, fontFamily: "Figtree_600SemiBold" },
   tabBadge: { paddingHorizontal: 7, paddingVertical: 2, borderRadius: 10, minWidth: 22, alignItems: "center" },
-  tabBadgeText: { fontSize: 11, fontFamily: "Inter_700Bold" },
+  tabBadgeText: { fontSize: 11, fontFamily: "Figtree_700Bold" },
   listContent: { paddingHorizontal: 20, paddingTop: 12 },
   manageBtn: { flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6, paddingVertical: 10, borderRadius: 12, marginBottom: 12 },
-  manageBtnText: { fontSize: 14, fontFamily: "Inter_600SemiBold" },
+  manageBtnText: { fontSize: 14, fontFamily: "Figtree_600SemiBold" },
 });
 
 const emptyStyles = StyleSheet.create({
   wrap: { alignItems: "center", paddingTop: 60, gap: 14, paddingHorizontal: 40 },
   iconWrap: { width: 80, height: 80, borderRadius: 40, alignItems: "center", justifyContent: "center" },
-  title: { fontSize: 18, fontFamily: "Inter_700Bold", textAlign: "center" },
-  subtitle: { fontSize: 14, fontFamily: "Inter_400Regular", textAlign: "center", lineHeight: 20 },
+  title: { fontSize: 18, fontFamily: "Figtree_700Bold", textAlign: "center" },
+  subtitle: { fontSize: 14, fontFamily: "Figtree_400Regular", textAlign: "center", lineHeight: 20 },
   ctaBtn: { paddingHorizontal: 28, paddingVertical: 12, borderRadius: 14 },
-  ctaText: { color: "#fff", fontSize: 14, fontFamily: "Inter_700Bold" },
+  ctaText: { color: "#fff", fontSize: 14, fontFamily: "Figtree_700Bold" },
 });

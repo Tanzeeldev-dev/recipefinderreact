@@ -130,7 +130,7 @@ export default function SettingsScreen() {
             onPress={handleSave}
             style={({ pressed }) => [
               styles.saveBtn,
-              { backgroundColor: saved ? "#4CAF50" : colors.primary, opacity: pressed ? 0.85 : 1 },
+              { backgroundColor: saved ? "#5B21B6" : colors.primary, opacity: pressed ? 0.85 : 1 },
             ]}
           >
             <Ionicons name={saved ? "checkmark" : "save-outline"} size={18} color="#fff" />
@@ -164,16 +164,16 @@ const styles = StyleSheet.create({
   container: { flex: 1 },
   content: { paddingHorizontal: 20, gap: 20 },
   navHeader: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 8 },
-  pageTitle: { fontSize: 18, fontFamily: "Inter_700Bold" },
+  pageTitle: { fontSize: 18, fontFamily: "Figtree_700Bold" },
   section: { gap: 8 },
-  sectionTitle: { fontSize: 11, fontFamily: "Inter_600SemiBold", letterSpacing: 0.8 },
+  sectionTitle: { fontSize: 11, fontFamily: "Figtree_600SemiBold", letterSpacing: 0.8 },
   card: { borderRadius: 16, borderWidth: 1, padding: 16, gap: 16 },
-  optionLabel: { fontSize: 15, fontFamily: "Inter_500Medium" },
+  optionLabel: { fontSize: 15, fontFamily: "Figtree_500Medium" },
   themeOptions: { flexDirection: "row", gap: 8 },
   themeBtn: { flex: 1, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6, paddingVertical: 10, borderRadius: 10, borderWidth: 1 },
-  themeBtnText: { fontSize: 13, fontFamily: "Inter_600SemiBold" },
+  themeBtnText: { fontSize: 13, fontFamily: "Figtree_600SemiBold" },
   field: { gap: 6 },
-  fieldLabel: { fontSize: 14, fontFamily: "Inter_600SemiBold" },
+  fieldLabel: { fontSize: 14, fontFamily: "Figtree_600SemiBold" },
   inputWrap: {
     paddingHorizontal: 14,
     paddingVertical: 12,
@@ -184,15 +184,15 @@ const styles = StyleSheet.create({
   textAreaWrap: { height: 80 },
   input: {
     fontSize: 15,
-    fontFamily: "Inter_400Regular",
+    fontFamily: "Figtree_400Regular",
     padding: 0,
     margin: 0,
     borderWidth: 0,
     backgroundColor: "transparent",
   },
   saveBtn: { flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8, paddingVertical: 13, borderRadius: 12 },
-  saveBtnText: { color: "#fff", fontSize: 15, fontFamily: "Inter_700Bold" },
+  saveBtnText: { color: "#fff", fontSize: 15, fontFamily: "Figtree_700Bold" },
   aboutRow: { flexDirection: "row", justifyContent: "space-between", paddingVertical: 10 },
-  aboutLabel: { fontSize: 14, fontFamily: "Inter_400Regular" },
-  aboutValue: { fontSize: 14, fontFamily: "Inter_600SemiBold" },
+  aboutLabel: { fontSize: 14, fontFamily: "Figtree_400Regular" },
+  aboutValue: { fontSize: 14, fontFamily: "Figtree_600SemiBold" },
 });

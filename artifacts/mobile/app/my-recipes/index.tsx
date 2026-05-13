@@ -90,7 +90,7 @@ export default function MyRecipesScreen() {
                   backgroundColor: item.difficulty === "Easy" ? "#E8F5E9" : item.difficulty === "Medium" ? "#FFF3E0" : "#FFEBEE"
                 }]}>
                   <Text style={[styles.diffText, {
-                    color: item.difficulty === "Easy" ? "#4CAF50" : item.difficulty === "Medium" ? "#FF9800" : "#F44336"
+                    color: item.difficulty === "Easy" ? "#5B21B6" : item.difficulty === "Medium" ? "#FF9800" : "#F44336"
                   }]}>{item.difficulty}</Text>
                 </View>
               </View>
@@ -109,7 +109,7 @@ export default function MyRecipesScreen() {
                 <Ionicons
                   name={isFavorite(item.id) ? "heart" : "heart-outline"}
                   size={20}
-                  color={isFavorite(item.id) ? "#FF6B35" : colors.mutedForeground}
+                  color={isFavorite(item.id) ? "#7C3AED" : colors.mutedForeground}
                 />
               </Pressable>
               <Pressable onPress={() => router.push(`/recipe/${item.id}`)} hitSlop={8}>
@@ -147,24 +147,24 @@ const styles = StyleSheet.create({
   content: { paddingHorizontal: 20, gap: 12 },
   headerRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 8 },
   backBtn: { width: 40, height: 40, justifyContent: "center", marginBottom: 4 },
-  title: { fontSize: 26, fontFamily: "Inter_700Bold" },
-  subtitle: { fontSize: 14, fontFamily: "Inter_400Regular" },
+  title: { fontSize: 26, fontFamily: "Figtree_700Bold" },
+  subtitle: { fontSize: 14, fontFamily: "Figtree_400Regular" },
   createBtn: { width: 44, height: 44, borderRadius: 22, alignItems: "center", justifyContent: "center", marginBottom: 4 },
   recipeCard: { flexDirection: "row", borderRadius: 16, overflow: "hidden", borderWidth: 1 },
   recipeImage: { width: 90, height: 90 },
   recipeInfo: { flex: 1, padding: 12, gap: 4, justifyContent: "center" },
   recipeBadgeRow: { flexDirection: "row", gap: 6 },
   catBadge: { paddingHorizontal: 8, paddingVertical: 3, borderRadius: 6 },
-  catBadgeText: { fontSize: 10, fontFamily: "Inter_600SemiBold" },
+  catBadgeText: { fontSize: 10, fontFamily: "Figtree_600SemiBold" },
   diffBadge: { paddingHorizontal: 8, paddingVertical: 3, borderRadius: 6 },
-  diffText: { fontSize: 10, fontFamily: "Inter_600SemiBold" },
-  recipeTitle: { fontSize: 14, fontFamily: "Inter_700Bold", lineHeight: 19 },
+  diffText: { fontSize: 10, fontFamily: "Figtree_600SemiBold" },
+  recipeTitle: { fontSize: 14, fontFamily: "Figtree_700Bold", lineHeight: 19 },
   recipeMeta: { flexDirection: "row", alignItems: "center", gap: 4 },
-  metaText: { fontSize: 11, fontFamily: "Inter_400Regular" },
+  metaText: { fontSize: 11, fontFamily: "Figtree_400Regular" },
   recipeActions: { paddingVertical: 12, paddingHorizontal: 10, gap: 16, justifyContent: "center" },
   emptyState: { alignItems: "center", paddingTop: 60, gap: 14, paddingHorizontal: 40 },
-  emptyTitle: { fontSize: 20, fontFamily: "Inter_700Bold" },
-  emptySubtitle: { fontSize: 14, fontFamily: "Inter_400Regular", textAlign: "center", lineHeight: 20 },
+  emptyTitle: { fontSize: 20, fontFamily: "Figtree_700Bold" },
+  emptySubtitle: { fontSize: 14, fontFamily: "Figtree_400Regular", textAlign: "center", lineHeight: 20 },
   createFirstBtn: { flexDirection: "row", alignItems: "center", gap: 8, paddingHorizontal: 24, paddingVertical: 12, borderRadius: 14 },
-  createFirstBtnText: { color: "#fff", fontSize: 15, fontFamily: "Inter_700Bold" },
+  createFirstBtnText: { color: "#fff", fontSize: 15, fontFamily: "Figtree_700Bold" },
 });

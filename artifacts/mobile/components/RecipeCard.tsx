@@ -57,7 +57,7 @@ export function RecipeCard({ recipe, variant = "compact" }: RecipeCardProps) {
           <Text style={styles.featuredBadgeText}>{recipe.category}</Text>
         </View>
         <Pressable onPress={handleFavorite} style={styles.featuredFavBtn} hitSlop={10}>
-          <Ionicons name={favorited ? "heart" : "heart-outline"} size={22} color={favorited ? "#FF6B35" : "#fff"} />
+          <Ionicons name={favorited ? "heart" : "heart-outline"} size={22} color={favorited ? "#7C3AED" : "#fff"} />
         </Pressable>
         <View style={styles.featuredInfo}>
           <Text style={styles.featuredTitle} numberOfLines={2}>{recipe.title}</Text>
@@ -118,7 +118,7 @@ export function RecipeCard({ recipe, variant = "compact" }: RecipeCardProps) {
               style={[
                 styles.difficultyBadge,
                 {
-                  color: recipe.difficulty === "Easy" ? "#4CAF50" : recipe.difficulty === "Medium" ? "#FF9800" : "#F44336",
+                  color: recipe.difficulty === "Easy" ? "#5B21B6" : recipe.difficulty === "Medium" ? "#FF9800" : "#F44336",
                   backgroundColor: recipe.difficulty === "Easy" ? "#E8F5E9" : recipe.difficulty === "Medium" ? "#FFF3E0" : "#FFEBEE",
                 },
               ]}
@@ -128,7 +128,7 @@ export function RecipeCard({ recipe, variant = "compact" }: RecipeCardProps) {
           </View>
         </View>
         <Pressable onPress={handleFavorite} style={styles.listFavBtn} hitSlop={10}>
-          <Ionicons name={favorited ? "heart" : "heart-outline"} size={22} color={favorited ? "#FF6B35" : colors.mutedForeground} />
+          <Ionicons name={favorited ? "heart" : "heart-outline"} size={22} color={favorited ? "#7C3AED" : colors.mutedForeground} />
         </Pressable>
       </Pressable>
     );
@@ -153,7 +153,7 @@ export function RecipeCard({ recipe, variant = "compact" }: RecipeCardProps) {
       </View>
       <LinearGradient colors={["transparent", "rgba(0,0,0,0.45)"]} style={styles.compactGradient} />
       <Pressable onPress={handleFavorite} style={styles.compactFavBtn} hitSlop={10}>
-        <Ionicons name={favorited ? "heart" : "heart-outline"} size={18} color={favorited ? "#FF6B35" : "#fff"} />
+        <Ionicons name={favorited ? "heart" : "heart-outline"} size={18} color={favorited ? "#7C3AED" : "#fff"} />
       </Pressable>
       <View style={styles.compactInfo}>
         <Text style={[styles.compactTitle, { color: colors.foreground }]} numberOfLines={2}>
@@ -176,30 +176,30 @@ const styles = StyleSheet.create({
   featuredImage: { width: "100%", height: "100%" },
   featuredGradient: { ...StyleSheet.absoluteFillObject, top: "30%" },
   featuredBadge: { position: "absolute", top: 12, left: 12, backgroundColor: "rgba(255,255,255,0.2)", paddingHorizontal: 10, paddingVertical: 4, borderRadius: 20, borderWidth: 1, borderColor: "rgba(255,255,255,0.3)" },
-  featuredBadgeText: { color: "#fff", fontSize: 11, fontFamily: "Inter_600SemiBold" },
+  featuredBadgeText: { color: "#fff", fontSize: 11, fontFamily: "Figtree_600SemiBold" },
   featuredFavBtn: { position: "absolute", top: 12, right: 12, width: 34, height: 34, borderRadius: 17, backgroundColor: "rgba(0,0,0,0.25)", alignItems: "center", justifyContent: "center" },
   featuredInfo: { position: "absolute", bottom: 0, left: 0, right: 0, padding: 14 },
-  featuredTitle: { color: "#fff", fontSize: 16, fontFamily: "Inter_700Bold", marginBottom: 6 },
+  featuredTitle: { color: "#fff", fontSize: 16, fontFamily: "Figtree_700Bold", marginBottom: 6 },
   featuredMeta: { flexDirection: "row", gap: 12 },
   metaItem: { flexDirection: "row", alignItems: "center", gap: 3 },
-  metaText: { color: "rgba(255,255,255,0.9)", fontSize: 12, fontFamily: "Inter_500Medium" },
+  metaText: { color: "rgba(255,255,255,0.9)", fontSize: 12, fontFamily: "Figtree_500Medium" },
   compactCard: { borderRadius: 16, overflow: "hidden", marginBottom: 12 },
   compactImageWrap: { width: "100%", height: 130 },
   compactImage: { width: "100%", height: 130 },
   compactGradient: { position: "absolute", top: 0, left: 0, right: 0, height: 130 },
   compactFavBtn: { position: "absolute", top: 8, right: 8, width: 30, height: 30, borderRadius: 15, backgroundColor: "rgba(0,0,0,0.25)", alignItems: "center", justifyContent: "center" },
   compactInfo: { padding: 10 },
-  compactTitle: { fontSize: 13, fontFamily: "Inter_600SemiBold", marginBottom: 4, lineHeight: 18 },
+  compactTitle: { fontSize: 13, fontFamily: "Figtree_600SemiBold", marginBottom: 4, lineHeight: 18 },
   compactMeta: { flexDirection: "row", alignItems: "center", gap: 4 },
-  compactTime: { fontSize: 11, fontFamily: "Inter_400Regular" },
+  compactTime: { fontSize: 11, fontFamily: "Figtree_400Regular" },
   listCard: { flexDirection: "row", borderRadius: 16, overflow: "hidden", marginBottom: 12, borderWidth: 1 },
   listImageWrap: { width: 100, height: 100 },
   listImage: { width: 100, height: 100 },
   listInfo: { flex: 1, padding: 12, justifyContent: "center", gap: 3 },
-  listCategory: { fontSize: 11, fontFamily: "Inter_600SemiBold", textTransform: "uppercase", letterSpacing: 0.5 },
-  listTitle: { fontSize: 14, fontFamily: "Inter_700Bold", lineHeight: 20 },
+  listCategory: { fontSize: 11, fontFamily: "Figtree_600SemiBold", textTransform: "uppercase", letterSpacing: 0.5 },
+  listTitle: { fontSize: 14, fontFamily: "Figtree_700Bold", lineHeight: 20 },
   listMeta: { flexDirection: "row", alignItems: "center", gap: 10, marginTop: 4 },
-  listMetaText: { fontSize: 12, fontFamily: "Inter_400Regular" },
-  difficultyBadge: { fontSize: 10, fontFamily: "Inter_600SemiBold", paddingHorizontal: 7, paddingVertical: 2, borderRadius: 6 },
+  listMetaText: { fontSize: 12, fontFamily: "Figtree_400Regular" },
+  difficultyBadge: { fontSize: 10, fontFamily: "Figtree_600SemiBold", paddingHorizontal: 7, paddingVertical: 2, borderRadius: 6 },
   listFavBtn: { paddingHorizontal: 12, alignSelf: "center" },
 });
