@@ -3,10 +3,8 @@ import {
   Figtree_500Medium,
   Figtree_600SemiBold,
   Figtree_700Bold,
-  useFonts,
 } from "@expo-google-fonts/figtree";
-import Feather from "@expo/vector-icons/Feather";
-import Ionicons from "@expo/vector-icons/Ionicons";
+import { useFonts } from "expo-font";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Redirect, Stack, useSegments } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -102,8 +100,6 @@ function AuthGatedStack() {
 
 export default function RootLayout() {
   const [fontsLoaded, fontError] = useFonts({
-    ...Ionicons.font,
-    ...Feather.font,
     Figtree_400Regular,
     Figtree_500Medium,
     Figtree_600SemiBold,
