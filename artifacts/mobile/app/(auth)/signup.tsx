@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
   content: { paddingHorizontal: 24 },
   backBtn: { width: 40, height: 40, justifyContent: "center", marginBottom: 16 },
   header: { alignItems: "center", marginBottom: 28 },
-  chefImage: { width: 140, height: 140, marginBottom: 12 },
+  chefImage: { width: 180, height: 180, marginBottom: 12 },
   title: { fontSize: 26, fontFamily: "Figtree_700Bold", marginBottom: 6 },
   subtitle: { fontSize: 15, fontFamily: "Figtree_400Regular" },
   form: { gap: 16 },

@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
   container: { flex: 1 },
   content: { paddingHorizontal: 24 },
   header: { alignItems: "center", marginBottom: 36 },
-  chefImage: { width: 160, height: 160, marginBottom: 16 },
+  chefImage: { width: 180, height: 180, marginBottom: 16 },
   title: { fontSize: 26, fontFamily: "Figtree_700Bold", marginBottom: 6 },
   subtitle: { fontSize: 15, fontFamily: "Figtree_400Regular" },
   form: { gap: 16 },

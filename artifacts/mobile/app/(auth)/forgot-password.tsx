@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
   container: { flex: 1, paddingHorizontal: 24 },
   backBtn: { width: 40, height: 40, justifyContent: "center", marginBottom: 32 },
   content: { alignItems: "center", gap: 16 },
-  chefImage: { width: 160, height: 160, marginBottom: 8 },
+  chefImage: { width: 180, height: 180, marginBottom: 8 },
   title: { fontSize: 24, fontFamily: "Figtree_700Bold", textAlign: "center" },
   subtitle: { fontSize: 15, fontFamily: "Figtree_400Regular", textAlign: "center", lineHeight: 22 },
   inputWrap: {
