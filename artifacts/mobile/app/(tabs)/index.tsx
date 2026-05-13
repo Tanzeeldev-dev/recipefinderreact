@@ -1,3 +1,4 @@
+import { Image } from "expo-image";
 import React, { useState } from "react";
 import {
   ActivityIndicator,
@@ -38,7 +39,11 @@ export default function HomeScreen() {
     : TOP_CATEGORIES.map((name) => ({ strCategory: name, strCategoryThumb: "", idCategory: name, strCategoryDescription: "" }));
 
   const firstName = user?.name?.split(" ")[0] ?? "Chef";
-  const topEmojis = ["🐑", "🐔", "🐷"];
+  const animalItems = [
+    { cat: "Lamb", image: "https://i.postimg.cc/yxwNmjnn/lamb.png" },
+    { cat: "Chicken", image: "https://i.postimg.cc/5yZtBgpr/chicken.png" },
+    { cat: "Pork", emoji: "🐷" },
+  ] as const;
 
   return (
     <ScrollView
@@ -70,22 +75,28 @@ export default function HomeScreen() {
         </Pressable>
       </View>
 
-      {/* Animal emojis (category quick-picks) */}
+      {/* Animal images (category quick-picks) */}
       <View style={styles.emojiRow}>
-        {topEmojis.map((emoji, i) => {
-          const cats = ["Lamb", "Chicken", "Pork"];
-          const cat = cats[i];
-          const isActive = selectedCategory === cat;
+        {animalItems.map((item) => {
+          const isActive = selectedCategory === item.cat;
           return (
             <Pressable
-              key={cat}
-              onPress={() => setSelectedCategory(cat)}
+              key={item.cat}
+              onPress={() => setSelectedCategory(item.cat)}
               style={[
                 styles.emojiBtn,
-                { backgroundColor: isActive ? colors.primary + "18" : "transparent" },
+                { backgroundColor: isActive ? colors.primary + "22" : "transparent" },
               ]}
             >
-              <Text style={styles.emojiText}>{emoji}</Text>
+              {"image" in item ? (
+                <Image
+                  source={{ uri: item.image }}
+                  style={styles.animalImage}
+                  contentFit="contain"
+                />
+              ) : (
+                <Text style={styles.emojiText}>{item.emoji}</Text>
+              )}
             </Pressable>
           );
         })}
@@ -191,8 +202,9 @@ const styles = StyleSheet.create({
   tagline: { fontSize: 26, fontFamily: "Figtree_700Bold", lineHeight: 32 },
   searchIconBtn: { width: 46, height: 46, borderRadius: 23, alignItems: "center", justifyContent: "center", marginTop: 4 },
   emojiRow: { flexDirection: "row", justifyContent: "center", gap: 24, paddingVertical: 16 },
-  emojiBtn: { width: 64, height: 64, borderRadius: 32, alignItems: "center", justifyContent: "center" },
+  emojiBtn: { width: 72, height: 72, borderRadius: 36, alignItems: "center", justifyContent: "center" },
   emojiText: { fontSize: 36 },
+  animalImage: { width: 56, height: 56 },
   section: { marginTop: 16 },
   sectionHeader: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingHorizontal: 20, marginBottom: 14 },
   sectionTitle: { fontSize: 18, fontFamily: "Figtree_700Bold" },

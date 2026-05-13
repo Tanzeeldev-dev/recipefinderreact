@@ -1,4 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
+import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
@@ -76,7 +77,12 @@ export default function SignupScreen() {
         </Pressable>
 
         <View style={styles.header}>
-          <Text style={[styles.title, { color: colors.foreground }]}>Create account</Text>
+          <Image
+            source={{ uri: "https://i.postimg.cc/3NPwX19Z/i2.png" }}
+            style={styles.chefImage}
+            contentFit="contain"
+          />
+          <Text style={[styles.title, { color: colors.foreground }]}>Create Account</Text>
           <Text style={[styles.subtitle, { color: colors.mutedForeground }]}>
             Join the Recipe Finder community
           </Text>
@@ -189,7 +195,8 @@ const styles = StyleSheet.create({
   container: { flex: 1 },
   content: { paddingHorizontal: 24 },
   backBtn: { width: 40, height: 40, justifyContent: "center", marginBottom: 16 },
-  header: { marginBottom: 28 },
+  header: { alignItems: "center", marginBottom: 28 },
+  chefImage: { width: 140, height: 140, marginBottom: 12 },
   title: { fontSize: 26, fontFamily: "Figtree_700Bold", marginBottom: 6 },
   subtitle: { fontSize: 15, fontFamily: "Figtree_400Regular" },
   form: { gap: 16 },

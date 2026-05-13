@@ -1,4 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
+import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
@@ -43,10 +44,12 @@ export default function ForgotPasswordScreen() {
 
       {!sent ? (
         <View style={styles.content}>
-          <View style={[styles.iconWrap, { backgroundColor: colors.primary + "18" }]}>
-            <Ionicons name="key-outline" size={40} color={colors.primary} />
-          </View>
-          <Text style={[styles.title, { color: colors.foreground }]}>Reset Password</Text>
+          <Image
+            source={{ uri: "https://i.postimg.cc/C5WKG7JN/i3.png" }}
+            style={styles.chefImage}
+            contentFit="contain"
+          />
+          <Text style={[styles.title, { color: colors.foreground }]}>Verify Your Email</Text>
           <Text style={[styles.subtitle, { color: colors.mutedForeground }]}>
             Enter your email and we'll send you a reset link
           </Text>
@@ -77,9 +80,11 @@ export default function ForgotPasswordScreen() {
         </View>
       ) : (
         <View style={styles.content}>
-          <View style={[styles.iconWrap, { backgroundColor: "#E8F5E9" }]}>
-            <Ionicons name="checkmark-circle" size={40} color="#5B21B6" />
-          </View>
+          <Image
+            source={{ uri: "https://i.postimg.cc/C5WKG7JN/i3.png" }}
+            style={styles.chefImage}
+            contentFit="contain"
+          />
           <Text style={[styles.title, { color: colors.foreground }]}>Check your email</Text>
           <Text style={[styles.subtitle, { color: colors.mutedForeground }]}>
             We've sent a password reset link to{"\n"}
@@ -104,7 +109,7 @@ const styles = StyleSheet.create({
   container: { flex: 1, paddingHorizontal: 24 },
   backBtn: { width: 40, height: 40, justifyContent: "center", marginBottom: 32 },
   content: { alignItems: "center", gap: 16 },
-  iconWrap: { width: 88, height: 88, borderRadius: 44, alignItems: "center", justifyContent: "center", marginBottom: 8 },
+  chefImage: { width: 160, height: 160, marginBottom: 8 },
   title: { fontSize: 24, fontFamily: "Figtree_700Bold", textAlign: "center" },
   subtitle: { fontSize: 15, fontFamily: "Figtree_400Regular", textAlign: "center", lineHeight: 22 },
   inputWrap: {

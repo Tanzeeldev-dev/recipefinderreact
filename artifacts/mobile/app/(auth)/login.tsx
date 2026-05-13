@@ -1,4 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
+import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
@@ -62,11 +63,12 @@ export default function LoginScreen() {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.header}>
-          <View style={[styles.logoWrap, { backgroundColor: colors.primary + "18" }]}>
-            <Ionicons name="restaurant" size={36} color={colors.primary} />
-          </View>
-          <Text style={[styles.appName, { color: colors.primary }]}>Recipe Finder</Text>
-          <Text style={[styles.title, { color: colors.foreground }]}>Welcome back</Text>
+          <Image
+            source={{ uri: "https://i.postimg.cc/PJBqWyKy/i1.png" }}
+            style={styles.chefImage}
+            contentFit="contain"
+          />
+          <Text style={[styles.title, { color: colors.foreground }]}>Welcome Back</Text>
           <Text style={[styles.subtitle, { color: colors.mutedForeground }]}>
             Sign in to your account
           </Text>
@@ -169,15 +171,7 @@ const styles = StyleSheet.create({
   container: { flex: 1 },
   content: { paddingHorizontal: 24 },
   header: { alignItems: "center", marginBottom: 36 },
-  logoWrap: {
-    width: 72,
-    height: 72,
-    borderRadius: 36,
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 12,
-  },
-  appName: { fontSize: 13, fontFamily: "Figtree_600SemiBold", marginBottom: 16, letterSpacing: 0.5 },
+  chefImage: { width: 160, height: 160, marginBottom: 16 },
   title: { fontSize: 26, fontFamily: "Figtree_700Bold", marginBottom: 6 },
   subtitle: { fontSize: 15, fontFamily: "Figtree_400Regular" },
   form: { gap: 16 },
