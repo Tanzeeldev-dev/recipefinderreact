@@ -8,7 +8,7 @@ import Feather from "@expo/vector-icons/Feather";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import * as Font from "expo-font";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Redirect, Stack, useSegments } from "expo-router";
+import { Stack, useRouter, useSegments } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import React, { useEffect, useRef, useState } from "react";
 import { Animated, Platform, StyleSheet, Text, View } from "react-native";
@@ -30,6 +30,7 @@ SplashScreen.preventAutoHideAsync();
 const queryClient = new QueryClient();
 const USE_NATIVE_DRIVER = Platform.OS !== "web";
 
+// ─── Splash animation ────────────────────────────────────────────────────────
 function SplashAnimation({ onDone }: { onDone: () => void }) {
   const logoScale = useRef(new Animated.Value(0.3)).current;
   const logoOpacity = useRef(new Animated.Value(0)).current;
@@ -67,22 +68,31 @@ function SplashAnimation({ onDone }: { onDone: () => void }) {
   );
 }
 
+// ─── Auth-gated navigator ─────────────────────────────────────────────────────
+// Always renders the Stack first, then navigates programmatically via useEffect.
+// This avoids the "action REPLACE not handled by any navigator" error that happens
+// when <Redirect> fires before the Stack is mounted.
 function AuthGatedStack() {
   const { user, isLoading, hasSeenOnboarding } = useAuth();
   const segments = useSegments();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (isLoading) return;
+
+    const inAuth = segments[0] === "(auth)";
+    const inOnboarding = segments[0] === "onboarding";
+    const inWelcome = segments[0] === "welcome";
+    const inTabs = segments[0] === "(tabs)";
+
+    if (!user && !inAuth && !inOnboarding && !inWelcome) {
+      router.replace(hasSeenOnboarding ? "/(auth)/login" : "/onboarding");
+    } else if (user && (inAuth || inOnboarding)) {
+      router.replace("/(tabs)");
+    }
+  }, [user, isLoading, segments, hasSeenOnboarding]);
 
   if (isLoading) return null;
-
-  const inAuth = segments[0] === "(auth)";
-  const inOnboarding = segments[0] === "onboarding";
-  const inWelcome = segments[0] === "welcome";
-
-  if (!user && !inAuth && !inOnboarding) {
-    return <Redirect href={hasSeenOnboarding ? "/(auth)/login" : "/onboarding"} />;
-  }
-  if (user && (inAuth || inOnboarding) && !inWelcome) {
-    return <Redirect href="/(tabs)" />;
-  }
 
   return (
     <Stack screenOptions={{ headerShown: false }}>
@@ -102,30 +112,20 @@ function AuthGatedStack() {
   );
 }
 
+// ─── Root layout ──────────────────────────────────────────────────────────────
 export default function RootLayout() {
+  const [showSplash, setShowSplash] = useState(true);
+
+  // Load ALL fonts — including icon fonts — in a single useFonts call.
+  // This is the only reliable way to ensure Ionicons/Feather render on Android.
   const [fontsLoaded, fontError] = Font.useFonts({
     Figtree_400Regular,
     Figtree_500Medium,
     Figtree_600SemiBold,
     Figtree_700Bold,
+    ...Ionicons.font,
+    ...Feather.font,
   });
-
-  // Separately load icon fonts via Font.loadAsync (the correct namespace call)
-  const [iconsReady, setIconsReady] = useState(false);
-  const [showSplash, setShowSplash] = useState(true);
-
-  useEffect(() => {
-    Font.loadAsync({
-      ...Ionicons.font,
-      ...Feather.font,
-    })
-      .catch(() => {
-        // Fonts may already be registered by Expo Go — that's fine, proceed.
-      })
-      .finally(() => {
-        setIconsReady(true);
-      });
-  }, []);
 
   useEffect(() => {
     if (fontsLoaded || fontError) {
@@ -133,7 +133,7 @@ export default function RootLayout() {
     }
   }, [fontsLoaded, fontError]);
 
-  if ((!fontsLoaded && !fontError) || !iconsReady) return null;
+  if (!fontsLoaded && !fontError) return null;
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -167,6 +167,7 @@ export default function RootLayout() {
   );
 }
 
+// ─── Styles ───────────────────────────────────────────────────────────────────
 const styles = StyleSheet.create({
   splash: {
     ...StyleSheet.absoluteFillObject,
