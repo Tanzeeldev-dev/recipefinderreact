@@ -6,7 +6,7 @@ import {
 } from "@expo-google-fonts/figtree";
 import Feather from "@expo/vector-icons/Feather";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useFonts, loadAsync } from "expo-font";
+import * as Font from "expo-font";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Redirect, Stack, useSegments } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -103,26 +103,28 @@ function AuthGatedStack() {
 }
 
 export default function RootLayout() {
-  // Load Figtree fonts via useFonts hook
-  const [fontsLoaded, fontError] = useFonts({
+  const [fontsLoaded, fontError] = Font.useFonts({
     Figtree_400Regular,
     Figtree_500Medium,
     Figtree_600SemiBold,
     Figtree_700Bold,
   });
 
-  // Load icon fonts separately via loadAsync — guaranteed to load
-  // even if Expo Go has them pre-bundled; .catch() silently skips duplicates
+  // Separately load icon fonts via Font.loadAsync (the correct namespace call)
   const [iconsReady, setIconsReady] = useState(false);
   const [showSplash, setShowSplash] = useState(true);
 
   useEffect(() => {
-    loadAsync({
+    Font.loadAsync({
       ...Ionicons.font,
       ...Feather.font,
     })
-      .catch(() => {})
-      .finally(() => setIconsReady(true));
+      .catch(() => {
+        // Fonts may already be registered by Expo Go — that's fine, proceed.
+      })
+      .finally(() => {
+        setIconsReady(true);
+      });
   }, []);
 
   useEffect(() => {
