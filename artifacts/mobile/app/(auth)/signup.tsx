@@ -55,7 +55,7 @@ export default function SignupScreen() {
     if (err) {
       setError(err);
     } else {
-      router.replace("/(tabs)");
+      router.replace("/welcome");
     }
   };
 

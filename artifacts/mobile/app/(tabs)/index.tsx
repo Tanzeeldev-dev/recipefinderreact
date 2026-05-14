@@ -42,7 +42,7 @@ export default function HomeScreen() {
   const animalItems = [
     { cat: "Lamb", image: "https://i.postimg.cc/yxwNmjnn/lamb.png" },
     { cat: "Chicken", image: "https://i.postimg.cc/5yZtBgpr/chicken.png" },
-    { cat: "Pork", emoji: "🐷" },
+    { cat: "Goat", image: "https://raw.githubusercontent.com/twitter/twemoji/master/assets/72x72/1f410.png" },
   ] as const;
 
   return (

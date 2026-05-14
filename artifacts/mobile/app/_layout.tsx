@@ -6,7 +6,7 @@ import {
 } from "@expo-google-fonts/figtree";
 import Feather from "@expo/vector-icons/Feather";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useFonts } from "expo-font";
+import { useFonts, loadAsync } from "expo-font";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Redirect, Stack, useSegments } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -75,17 +75,19 @@ function AuthGatedStack() {
 
   const inAuth = segments[0] === "(auth)";
   const inOnboarding = segments[0] === "onboarding";
+  const inWelcome = segments[0] === "welcome";
 
   if (!user && !inAuth && !inOnboarding) {
     return <Redirect href={hasSeenOnboarding ? "/(auth)/login" : "/onboarding"} />;
   }
-  if (user && (inAuth || inOnboarding)) {
+  if (user && (inAuth || inOnboarding) && !inWelcome) {
     return <Redirect href="/(tabs)" />;
   }
 
   return (
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="onboarding" />
+      <Stack.Screen name="welcome" options={{ animation: "fade" }} />
       <Stack.Screen name="(auth)" />
       <Stack.Screen name="(tabs)" />
       <Stack.Screen name="recipe/[id]" options={{ animation: "slide_from_right" }} />
@@ -101,15 +103,27 @@ function AuthGatedStack() {
 }
 
 export default function RootLayout() {
+  // Load Figtree fonts via useFonts hook
   const [fontsLoaded, fontError] = useFonts({
-    ...Ionicons.font,
-    ...Feather.font,
     Figtree_400Regular,
     Figtree_500Medium,
     Figtree_600SemiBold,
     Figtree_700Bold,
   });
+
+  // Load icon fonts separately via loadAsync — guaranteed to load
+  // even if Expo Go has them pre-bundled; .catch() silently skips duplicates
+  const [iconsReady, setIconsReady] = useState(false);
   const [showSplash, setShowSplash] = useState(true);
+
+  useEffect(() => {
+    loadAsync({
+      ...Ionicons.font,
+      ...Feather.font,
+    })
+      .catch(() => {})
+      .finally(() => setIconsReady(true));
+  }, []);
 
   useEffect(() => {
     if (fontsLoaded || fontError) {
@@ -117,7 +131,7 @@ export default function RootLayout() {
     }
   }, [fontsLoaded, fontError]);
 
-  if (!fontsLoaded && !fontError) return null;
+  if ((!fontsLoaded && !fontError) || !iconsReady) return null;
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
