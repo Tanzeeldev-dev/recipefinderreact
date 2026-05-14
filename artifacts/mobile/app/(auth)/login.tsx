@@ -67,7 +67,7 @@ export default function LoginScreen() {
       >
         <View style={styles.header}>
           <Image
-            source={{ uri: "https://i.postimg.cc/PJBqWyKy/i1.png" }}
+            source={require("../../assets/images/chef-login.png")}
             style={{ width: IMG_SIZE, height: IMG_SIZE, marginBottom: 16 }}
             contentFit="contain"
           />

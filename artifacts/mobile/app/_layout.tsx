@@ -116,16 +116,23 @@ function AuthGatedStack() {
 export default function RootLayout() {
   const [showSplash, setShowSplash] = useState(true);
 
-  // Load ALL fonts — including icon fonts — in a single useFonts call.
-  // This is the only reliable way to ensure Ionicons/Feather render on Android.
+  // Step 1: Load Figtree text fonts. Kept SEPARATE from icon fonts so an
+  // "already registered" error from Expo Go doesn't fail both.
   const [fontsLoaded, fontError] = Font.useFonts({
     Figtree_400Regular,
     Figtree_500Medium,
     Figtree_600SemiBold,
     Figtree_700Bold,
-    ...Ionicons.font,
-    ...Feather.font,
   });
+
+  // Step 2: Load icon fonts independently — fire-and-forget.
+  // Expo Go may already have them; we swallow any "already registered" error.
+  useEffect(() => {
+    Font.loadAsync({
+      ...Ionicons.font,
+      ...Feather.font,
+    }).catch(() => {});
+  }, []);
 
   useEffect(() => {
     if (fontsLoaded || fontError) {

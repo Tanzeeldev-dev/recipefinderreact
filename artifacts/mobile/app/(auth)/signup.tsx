@@ -81,7 +81,7 @@ export default function SignupScreen() {
 
         <View style={styles.header}>
           <Image
-            source={{ uri: "https://i.postimg.cc/3NPwX19Z/i2.png" }}
+            source={require("../../assets/images/chef-signup.png")}
             style={{ width: IMG_SIZE, height: IMG_SIZE, marginBottom: 12 }}
             contentFit="contain"
           />
